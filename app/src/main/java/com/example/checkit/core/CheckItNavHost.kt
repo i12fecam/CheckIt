@@ -1,4 +1,4 @@
-package com.example.checkit
+package com.example.checkit.core
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.checkit.registration.LoginScreen
-import com.example.checkit.registration.RegistrationScreen
+import com.example.checkit.features.registration.ui.LoginScreen
+import com.example.checkit.features.registration.ui.RegistrationScreen
 
 @Composable
 fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues){

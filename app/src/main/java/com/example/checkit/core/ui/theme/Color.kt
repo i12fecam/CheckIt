@@ -1,4 +1,4 @@
-package com.example.checkit.ui.theme
+package com.example.checkit.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

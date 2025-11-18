@@ -1,4 +1,4 @@
-package com.example.checkit
+package com.example.checkit.core
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.checkit.ui.theme.CheckItTheme
+import com.example.checkit.core.ui.theme.CheckItTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

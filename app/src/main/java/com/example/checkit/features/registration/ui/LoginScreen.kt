@@ -1,4 +1,4 @@
-package com.example.checkit.registration
+package com.example.checkit.features.registration.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

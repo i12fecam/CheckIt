@@ -60,4 +60,19 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Retrofit (HTTP client)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Converter for JSON serialization (using kotlinx.serialization)
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+
+    // OkHttp (HTTP client implementation for Retrofit)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // OkHttp logging interceptor (very helpful for debugging requests/responses)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // KotlinX Serialization runtime (for defining data classes)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }

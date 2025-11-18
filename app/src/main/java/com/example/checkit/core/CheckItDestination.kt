@@ -1,7 +1,5 @@
-package com.example.checkit
+package com.example.checkit.core
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
