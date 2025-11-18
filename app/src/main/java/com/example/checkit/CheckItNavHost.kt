@@ -7,20 +7,36 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.checkit.registration.LoginScreen
+import com.example.checkit.registration.RegistrationScreen
 
 @Composable
 fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues){
 
     NavHost(
         navController = navController,
-        startDestination = ChallengeTasks.route,
+        startDestination = Login.route,
         modifier = Modifier.padding(innerPadding))
     {
         composable(route = ChallengeTasks.route){
             ChallengeListScreen(message = null)
         }
-        composable(route = Profile.route) {
-            LoginScreen(onLoginSuccess = null)
+        composable(route = Login.route) {
+            LoginScreen(onLogin = {
+
+            },
+            onNavigateToRegistration = {
+                navController.navigate(Registration.route)
+            })
+        }
+        composable(route = Registration.route){
+            RegistrationScreen(
+                onRegister = {
+                },
+                onNavigateToLogin = {
+                    navController.navigate(Login.route)
+                }
+            )
         }
         composable(
             route = ChallengeTasks.routeWithArgs,

@@ -4,39 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.checkit.ui.theme.CheckItTheme
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.PaddingValues
-import com.example.checkit.LoginScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,32 +40,35 @@ fun CheckItApp() {
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
     val currentScreen =
-        allCheckItDestination().find { it.route == currentDestination?.route } ?: Profile
+        allCheckItDestination().find { it.route == currentDestination?.route } ?: Login
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar() {
-                NavigationBarItem(
-                    icon = { Icon(Icons.Filled.Person, contentDescription = null) },
-                    label = { Text("Perfil") },
-                    selected = false,
-                    onClick = {
-                        navController.navigate(route = Profile.route) { launchSingleTop = true }
-                    }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                    label = { Text("Desafio") },
-                    selected = false,
-                    onClick = {
-                        navController.navigate(route = ChallengeTasks.route) {
-                            launchSingleTop = true
+            if (currentScreen.showNavigationBar){
+                NavigationBar() {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                        label = { Text("Perfil") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = Profile.route) { launchSingleTop = true }
                         }
-                    }
-                )
+                    )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+                        label = { Text("Desafio") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = ChallengeTasks.route) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
             }
+
         }
     ) { innerPadding ->
         CheckItNavHost(
@@ -95,34 +80,6 @@ fun CheckItApp() {
     }
 
 
-
-
-
-    @Composable
-    fun CheckItNavHost(
-        navController: NavHostController,
-        innerPadding: PaddingValues
-    ) {
-        // Usamos el innerPadding para asegurar que el contenido se ajuste correctamente
-        NavHost(
-            navController = navController,
-            startDestination = "login",  // Establece la pantalla de login como la pantalla inicial
-            modifier = Modifier.padding(innerPadding)  // Aplica el innerPadding aquí
-        ) {
-            // Pantalla de login
-            composable("login")
-            {
-                LoginScreen(
-                    onLoginSuccess = {
-                        navController.navigate(Profile.route) {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }
-                )
-            }
-
-        }
-    }
 }
 
 

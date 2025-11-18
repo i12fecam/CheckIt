@@ -1,22 +1,31 @@
-package com.example.checkit
+package com.example.checkit.registration
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.checkit.R
-
+import com.example.checkit.Registration
 
 
 @Composable
-fun LoginScreen(onLoginSuccess: Any?) {
-    // Column to arrange elements vertically
+fun RegistrationScreen( onRegister: () -> Unit, onNavigateToLogin: () -> Unit){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -26,19 +35,18 @@ fun LoginScreen(onLoginSuccess: Any?) {
     ) {
         // Title
         Text(
-            text = "¡Bienvenido de nuevo!",
+            text = "Registrarse como nuevo usuario",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // Image (You can use your own image here)
-        Image(
-            painter = painterResource(id = R.drawable.alquemista_recortada), // Placeholder image
-            contentDescription = "Login Image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(bottom = 24.dp)
+        // Username TextField
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Nombre de usuario") },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            singleLine = true
         )
 
         // Email TextField
@@ -60,27 +68,28 @@ fun LoginScreen(onLoginSuccess: Any?) {
             singleLine = true
         )
 
-        // Forgot Password link
-        Text(
-            text = "¿Olvidaste la contraseña?",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+
 
         // Sign In Button
         Button(
-            onClick = { /* Handle login */ },
+            onClick = { onRegister() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Iniciar Sesión")
+            Text(text = "Registrarse")
         }
 
         // Register link
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "¿No tienes cuenta? Registrarme",
+            text = "Tienes una cuenta ya?",
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { /* Handle registration */ }
+            modifier = Modifier.clickable { onNavigateToLogin() }
         )
     }
+}
+
+@Preview
+@Composable
+fun RegistrationPreview(){
+    RegistrationScreen(onNavigateToLogin = {}, onRegister = {})
 }
