@@ -31,6 +31,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.checkit.ui.theme.CheckItTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.PaddingValues
+import com.example.checkit.LoginScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,48 +50,79 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@PreviewScreenSizes
+//@PreviewScreenSizes
 @Composable
 fun CheckItApp() {
     val navController = rememberNavController()
 
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
-    val currentScreen = allCheckItDestination().find{it.route == currentDestination?.route} ?: Profile
+    val currentScreen =
+        allCheckItDestination().find { it.route == currentDestination?.route } ?: Profile
 
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(){
+            NavigationBar() {
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Person, contentDescription = null) },
                     label = { Text("Perfil") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route = Profile.route){ launchSingleTop = true }
+                        navController.navigate(route = Profile.route) { launchSingleTop = true }
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                    label = { Text("Desafio")},
+                    label = { Text("Desafio") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route = ChallengeTasks.route){ launchSingleTop = true }
+                        navController.navigate(route = ChallengeTasks.route) {
+                            launchSingleTop = true
+                        }
                     }
                 )
-
-
             }
         }
     ) { innerPadding ->
         CheckItNavHost(
             navController = navController,
             innerPadding = innerPadding
+
         )
 
     }
 
+
+
+
+
+    @Composable
+    fun CheckItNavHost(
+        navController: NavHostController,
+        innerPadding: PaddingValues
+    ) {
+        // Usamos el innerPadding para asegurar que el contenido se ajuste correctamente
+        NavHost(
+            navController = navController,
+            startDestination = "login",  // Establece la pantalla de login como la pantalla inicial
+            modifier = Modifier.padding(innerPadding)  // Aplica el innerPadding aquí
+        ) {
+            // Pantalla de login
+            composable("login")
+            {
+                LoginScreen(
+                    onLoginSuccess = {
+                        navController.navigate(Profile.route) {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+        }
+    }
 }
 
 
