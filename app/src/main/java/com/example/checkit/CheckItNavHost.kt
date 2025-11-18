@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.checkit.profile.ProfileScreen
 
 @Composable
 fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues){
@@ -21,7 +20,7 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
             ChallengeListScreen(message = null)
         }
         composable(route = Profile.route) {
-            ProfileScreen()
+            LoginScreen(onLoginSuccess = null)
         }
         composable(
             route = ChallengeTasks.routeWithArgs,
