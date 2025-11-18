@@ -75,4 +75,6 @@ dependencies {
 
     // KotlinX Serialization runtime (for defining data classes)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
