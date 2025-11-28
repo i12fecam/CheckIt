@@ -2,7 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
+    // Plugin de Hilt (asumiendo que ya lo tienes, si no, añádelo)
+    id("com.google.dagger.hilt.android")
 }
+
 
 android {
     namespace = "com.example.checkit"
@@ -77,4 +81,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    kapt("com.google.dagger:hilt-compiler:2.57.2")
+
+    implementation("androidx.security:security-crypto:1.1.0")
+
 }
