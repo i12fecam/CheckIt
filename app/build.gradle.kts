@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
-    // Plugin de Hilt (asumiendo que ya lo tienes, si no, añádelo)
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
 }
 
 
@@ -34,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
@@ -80,11 +80,12 @@ dependencies {
     // KotlinX Serialization runtime (for defining data classes)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-
-    implementation("com.google.dagger:hilt-android:2.57.2")
-    kapt("com.google.dagger:hilt-compiler:2.57.2")
 
     implementation("androidx.security:security-crypto:1.1.0")
+    //Hilt
+    kapt("com.google.dagger:hilt-compiler:2.57.2")
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation("com.google.dagger:hilt-android:2.57.2")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 }

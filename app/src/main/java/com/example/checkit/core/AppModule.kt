@@ -24,6 +24,15 @@ annotation class PublicClient
 @Retention(AnnotationRetention.BINARY)
 annotation class ProtectedClient
 
+
+// New Qualifiers for Retrofit instances
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PublicRetrofit
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ProtectedRetrofit
 object RetrofitClient {
     const val BASE_URL = "http://10.0.2.2:8080/"
     private val json = Json { ignoreUnknownKeys = true }
@@ -59,33 +68,63 @@ object AppModule {
             .build()
     }
 
+    /**
+     * Provides a singleton instance of the Json serializer.
+     * This is needed by Retrofit's converter to parse JSON responses.
+     */
+    @Provides
+    @Singleton // It's good practice to make it a singleton as it's thread-safe and reusable
+    fun provideJson(): Json = Json {
+        // You can configure the Json instance here if needed, for example:
+        ignoreUnknownKeys = true // A common and useful configuration
+        coerceInputValues = true // Another useful one for graceful error handling
+    }
     // ----------------------------------------------------
     // PASO 4: Proveer Instancias de Retrofit
     // ----------------------------------------------------
 
     @Provides
     @Singleton
-    fun provideRetrofitBuilder(json: Json): Retrofit.Builder {
+    @PublicRetrofit
+    fun providePublicRetrofit(
+        @PublicClient okHttpClient: OkHttpClient,
+        json: Json
+    ): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(json.asConverterFactory(contentType))
+            .client(okHttpClient) // Apply the client HERE
+            .addConverterFactory(json.asConverterFactory(contentType)) // And the converter HERE
+            .build()
     }
 
+    @Provides
+    @Singleton
+    @ProtectedRetrofit
+    fun provideProtectedRetrofit(
+        @ProtectedClient okHttpClient: OkHttpClient,
+        json: Json
+    ): Retrofit {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+    }
     // ----------------------------------------------------
     // PASO 5: Proveer Servicios
     // ----------------------------------------------------
 
     // Servicio Público (usa el cliente público)
+
     @Provides
     @Singleton
     fun provideAuthService(
-        retrofitBuilder: Retrofit.Builder,
-        @PublicClient okHttpClient: OkHttpClient // Inyección calificada
+        @PublicRetrofit retrofit: Retrofit // Inject the fully configured Retrofit instance
     ): AuthService {
-        return retrofitBuilder
-            .client(okHttpClient)
-            .build()
-            .create(AuthService::class.java)
+        return retrofit.create(AuthService::class.java)
     }
+
+
 }

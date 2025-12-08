@@ -5,4 +5,3 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     id("com.google.dagger.hilt.android") version "2.57.2" apply false // Usa la versión que estés usando
 }
-
