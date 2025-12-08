@@ -23,6 +23,7 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         }
         composable(route = Login.route) {
             LoginScreen(onLogin = {
+                navController.navigate(ChallengeTasks.route)
 
             },
             onNavigateToRegistration = {
