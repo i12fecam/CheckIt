@@ -18,6 +18,17 @@ data class LoginResponse(
     val username: String
     // You can add expiration time or other user details here
 )
+@Serializable
+data class RegisterRequest(
+    val username: String,
+    val password: String,
+    val email: String
+)
+@Serializable
+data class RegisterResponse(
+    val message: String
+)
+
 
 
 interface AuthService {
@@ -31,6 +42,6 @@ interface AuthService {
     suspend fun login(@Body loginRequest: LoginRequest): LoginResponse
 
     // You would add a registration function here as well:
-    // @POST("api/auth/register")
-    // suspend fun register(@Body registerRequest: RegisterRequest): RegisterResponse
+    @POST("api/auth/register")
+     suspend fun register(@Body registerRequest: RegisterRequest): RegisterResponse
 }
