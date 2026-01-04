@@ -1,5 +1,6 @@
 package com.example.checkit.features.registration.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(onLogin: () -> Unit, onNavigateToRegistration: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val uiState = viewModel.uiState
@@ -45,75 +47,79 @@ fun LoginScreen(onLogin: () -> Unit, onNavigateToRegistration: () -> Unit, viewM
             }
         }
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Scaffold(
+        snackbarHost = {SnackbarHost(hostState = snackbarHostState)}
     ) {
-        // Title
-        Text(
-            text = "¡Bienvenido de nuevo!",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Image (You can use your own image here)
-        Image(
-            painter = painterResource(id = R.drawable.alquemista_recortada), // Placeholder image
-            contentDescription = "Login Image",
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .padding(bottom = 24.dp)
-        )
-
-        // Email TextField
-        OutlinedTextField(
-            value = uiState.username,
-            onValueChange = {viewModel.onUsernameChange(it)},
-            label = { Text("Correo") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            singleLine = true
-        )
-
-        // Password TextField
-        OutlinedTextField(
-            value = uiState.password,
-            onValueChange = {viewModel.onPasswordChange(it)},
-            label = { Text("Contraseña") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
-        )
-
-        // Forgot Password link
-        Text(
-            text = "¿Olvidaste la contraseña?",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Sign In Button
-        Button(
-            onClick = { viewModel.login() },
-            modifier = Modifier.fillMaxWidth()
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Iniciar Sesión")
-        }
+            // Title
+            Text(
+                text = "¡Bienvenido de nuevo!",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        // Register link
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "¿No tienes cuenta? Registrarme",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onNavigateToRegistration() }
-        )
+//            // Image (You can use your own image here)
+//            Image(
+//                painter = painterResource(id = R.drawable.alquemista_recortada), // Placeholder image
+//                contentDescription = "Login Image",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(150.dp)
+//                    .padding(bottom = 24.dp)
+//            )
+
+            // Email TextField
+            OutlinedTextField(
+                value = uiState.username,
+                onValueChange = { viewModel.onUsernameChange(it) },
+                label = { Text("Nombre de usuario") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                singleLine = true
+            )
+
+            // Password TextField
+            OutlinedTextField(
+                value = uiState.password,
+                onValueChange = { viewModel.onPasswordChange(it) },
+                label = { Text("Contraseña") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true
+            )
+
+            // Forgot Password link
+            Text(
+                text = "¿Olvidaste la contraseña?",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
+            // Sign In Button
+            Button(
+                onClick = { viewModel.login() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Iniciar Sesión")
+            }
+
+            // Register link
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "¿No tienes cuenta? Registrarme",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onNavigateToRegistration() }
+            )
+        }
     }
 }
 

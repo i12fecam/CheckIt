@@ -80,7 +80,16 @@ class LoginViewModel @Inject constructor(
                 val loginResponse = authService.login(loginRequest)
 
                 uiState = uiState.copy(isLoading = false) // Stop loading state
-                _events.emit(LoginEvent.NavigateToHome)
+                when (loginResponse.errorResponse) {
+                    null -> {
+                        // Successful
+                        _events.emit(LoginEvent.NavigateToHome)
+                    }
+                    else -> {
+                        // Failed
+                        _events.emit(LoginEvent.ShowError(loginResponse.errorResponse))
+                    }
+                }
 
             } catch (e: HttpException) {
             // 3. Handle HTTP errors (e.g., 401 Unauthorized, 404 Not Found, 500 Server Error)

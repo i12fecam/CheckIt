@@ -1,7 +1,9 @@
 package com.example.checkit.features.registration.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RegistrationScreen( onRegister: () -> Unit, onNavigateToLogin: () -> Unit,viewModel: RegistrationViewModel = hiltViewModel()){
     val uiState = viewModel.uiState
@@ -53,65 +58,74 @@ fun RegistrationScreen( onRegister: () -> Unit, onNavigateToLogin: () -> Unit,vi
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Scaffold(
+        snackbarHost = {SnackbarHost(snackbarHostState)}
     ) {
-        // Title
-        Text(
-            text = "Registrarse como nuevo usuario",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Username TextField
-        OutlinedTextField(
-            value = uiState.username,
-            onValueChange = {viewModel.onUsernameChange(it)},
-            label = { Text("Nombre de usuario") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-            singleLine = true,
-        )
-
-        // Email TextField
-        OutlinedTextField(
-            value = uiState.email,
-            onValueChange = {viewModel.onEmailChange(it)},
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-            singleLine = true
-        )
-
-        // Password TextField
-        OutlinedTextField(
-            value = uiState.password,
-            onValueChange = {viewModel.onPasswordChange(it)},
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
-        )
-
-
-
-        // Sign In Button
-        Button(
-            onClick = { viewModel.register() },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Registrarse")
-        }
+            // Title
+            Text(
+                text = "Registrarse como nuevo usuario",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        // Register link
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Tienes una cuenta ya?",
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.clickable { onNavigateToLogin() }
-        )
+            // Username TextField
+            OutlinedTextField(
+                value = uiState.username,
+                onValueChange = { viewModel.onUsernameChange(it) },
+                label = { Text("Nombre de usuario") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                singleLine = true,
+            )
+
+            // Email TextField
+            OutlinedTextField(
+                value = uiState.email,
+                onValueChange = { viewModel.onEmailChange(it) },
+                label = { Text("Correo") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                singleLine = true
+            )
+
+            // Password TextField
+            OutlinedTextField(
+                value = uiState.password,
+                onValueChange = { viewModel.onPasswordChange(it) },
+                label = { Text("Contraseña") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true
+            )
+
+
+            // Sign In Button
+            Button(
+                onClick = { viewModel.register() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Registrarse")
+            }
+
+            // Register link
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tienes una cuenta ya?",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onNavigateToLogin() }
+            )
+        }
     }
 }
 

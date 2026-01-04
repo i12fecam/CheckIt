@@ -1,5 +1,6 @@
 package com.example.checkit.features.registration.data
 
+import android.R
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -14,8 +15,9 @@ data class LoginRequest(
 // Response body from /api/auth/login
 @Serializable
 data class LoginResponse(
-    val token: String,
-    val username: String
+    val errorResponse: String?,
+    val token: String?,
+    val username: String?
     // You can add expiration time or other user details here
 )
 @Serializable
@@ -26,7 +28,7 @@ data class RegisterRequest(
 )
 @Serializable
 data class RegisterResponse(
-    val message: String
+    val errorMessage: String?,
 )
 
 

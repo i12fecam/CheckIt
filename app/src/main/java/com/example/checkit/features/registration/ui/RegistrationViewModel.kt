@@ -85,9 +85,14 @@ class RegistrationViewModel @Inject constructor(
                 val registrationRequest = RegisterRequest(uiState.username, uiState.password,uiState.email)
 
                 val registerResponse = authService.register(registrationRequest)
-
                 uiState = uiState.copy(isLoading = false) // Stop loading state
-                _events.emit(RegistrationEvent.NavigateToLogin)
+
+                if (registerResponse.errorMessage == null){
+                    _events.emit(RegistrationEvent.NavigateToLogin)
+                } else{
+                    _events.emit(RegistrationEvent.ShowError(registerResponse.errorMessage))
+                }
+
 
             } catch (e: HttpException) {
             // 3. Handle HTTP errors (e.g., 401 Unauthorized, 404 Not Found, 500 Server Error)
