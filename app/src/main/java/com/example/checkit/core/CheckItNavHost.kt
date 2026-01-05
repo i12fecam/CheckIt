@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.checkit.features.challenges.ui.NewChallengeScreen
 import com.example.checkit.features.registration.ui.LoginScreen
 import com.example.checkit.features.registration.ui.RegistrationScreen
 
@@ -39,6 +40,12 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
                     navController.navigate(Login.route)
                 }
             )
+        }
+
+        composable( route = NewChallenge.route){
+            NewChallengeScreen(onCreation = {
+                navController.navigate(ChallengeTasks.route)
+            })
         }
         composable(
             route = ChallengeTasks.routeWithArgs,

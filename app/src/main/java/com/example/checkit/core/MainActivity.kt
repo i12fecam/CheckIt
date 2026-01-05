@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -70,6 +71,17 @@ fun CheckItApp() {
                         selected = false,
                         onClick = {
                             navController.navigate(route = ChallengeTasks.route) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                        label = { Text("Crear Nuevo Desafio") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = NewChallenge.route) {
                                 launchSingleTop = true
                             }
                         }

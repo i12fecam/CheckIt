@@ -22,6 +22,12 @@ object Registration: CheckItDestination {
     override val showNavigationBar = false
 }
 
+object NewChallenge: CheckItDestination {
+    override val icon = 1
+    override val route = "newChallenge"
+    override val showNavigationBar = true
+}
+
 object ChallengeTasks : CheckItDestination{
     override val icon = 1
     override val route = "challengeTasks"
