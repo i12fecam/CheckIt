@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.checkit.features.challenges.data.ChallengeService
 import com.example.checkit.features.challenges.data.CreateChallengeRequest
+import com.example.checkit.features.challenges.data.TaskRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,6 +21,8 @@ import javax.inject.Inject
 data class NewChallengeUiState(
     val title: String = "",
     val description: String = "",
+    val isOrdered: Boolean = true,
+    val tasks: List<TaskRequest> = emptyList() // Dinamic List of tasks
 )
 
 // Events that trigger a one-time action in the UI
@@ -54,8 +57,39 @@ class NewChallengeViewModel @Inject constructor(
         uiState = uiState.copy(description = input)
     }
 
-    // --- Login Logic ---
+    fun onOrderToggle(ordered: Boolean) {
+        uiState = uiState.copy(isOrdered = ordered)
+    }
 
+    // --- Dynamic Task Handling ---
+    fun addTask() {
+        val newTask = TaskRequest(
+            name = "Nueva Tarea ${uiState.tasks.size + 1}", //Default Name
+            type = "TEXT", // Default
+            taskOrder = uiState.tasks.size + 1,
+            qrAnswer = null,
+            nfcAnswer = null,
+            textAnswer = "" // Epty for deafault if is a TEXT
+        )
+        uiState = uiState.copy(tasks = uiState.tasks + newTask)
+    }
+
+    fun removeTask(index: Int) {
+        // Removes and recalculates order if necessary
+        val newList = uiState.tasks.toMutableList()
+        newList.removeAt(index)
+        // Optional: Recalculate taskOrder to maintain the sequence 1, 2, 3...
+        val reorderedList = newList.mapIndexed { i, task -> task.copy(taskOrder = i + 1) }
+        uiState = uiState.copy(tasks = reorderedList)
+    }
+
+    fun updateTask(index: Int, updatedTask: TaskRequest) {
+        val newList = uiState.tasks.toMutableList()
+        newList[index] = updatedTask
+        uiState = uiState.copy(tasks = newList)
+    }
+
+    // --- Login Logic ---
     fun saveChallenge() {
         // Prevent multiple simultaneous login attempts
 
@@ -67,12 +101,24 @@ class NewChallengeViewModel @Inject constructor(
             return
         }
 
+        // Additional check: There must be at least one task (as per PDF)
+        if (uiState.tasks.isEmpty()) {
+            viewModelScope.launch {
+                _events.emit(NewChallengeEvent.ShowError("Añade al menos una tarea."))
+            }
+            return
+        }
+
         viewModelScope.launch {
-
-
             // Simulate a network call via the repository
             try {
-                val createChallengeRequest = CreateChallengeRequest(uiState.title, uiState.description)
+                val createChallengeRequest = CreateChallengeRequest(
+                    uiState.title,
+                    uiState.description,
+                    isOrdered = uiState.isOrdered,
+                    tasks = uiState.tasks,
+                )
+
 
                 val createChallengeResponse = challengeService.createChallenge(createChallengeRequest)
 

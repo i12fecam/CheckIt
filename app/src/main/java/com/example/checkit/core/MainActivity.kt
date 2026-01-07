@@ -24,10 +24,6 @@ import com.example.checkit.core.ui.theme.CheckItTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
-
-@HiltAndroidApp
-class MyApplication : Application() {
-}
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

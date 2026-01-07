@@ -59,6 +59,7 @@ class TokenManagerImpl @Inject constructor(
     @ApplicationContext private val context: Context // Hilt inyecta el Context
 ) : TokenManager {
     private val sharedPreferences: SharedPreferences by lazy {
+        try{
         // Master Key for encrypting SharedPreferences file name and keys
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -71,7 +72,27 @@ class TokenManagerImpl @Inject constructor(
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
+    } catch (e: Exception){
+            // SE CRASHA (Chiave corrotta o backup errato):
+            // Cancelliamo il file corrotto e ne creiamo uno nuovo.
+            // Questo impedisce il "loop della morte" all'avvio.
+            context.getSharedPreferences("secure_token_prefs", Context.MODE_PRIVATE).edit().clear().apply()
+
+            // Riprova a creare (ora dovrebbe funzionare perché è pulito)
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            EncryptedSharedPreferences.create(
+                context,
+                "secure_token_prefs",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
     }
+
 
     // Keys for storing tokens
     private companion object {
