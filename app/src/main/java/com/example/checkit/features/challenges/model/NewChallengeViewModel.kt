@@ -22,6 +22,7 @@ data class NewChallengeUiState(
     val title: String = "",
     val description: String = "",
     val isOrdered: Boolean = true,
+    val imageUrl: String = "",
     val tasks: List<TaskRequest> = emptyList() // Dinamic List of tasks
 )
 
@@ -59,6 +60,10 @@ class NewChallengeViewModel @Inject constructor(
 
     fun onOrderToggle(ordered: Boolean) {
         uiState = uiState.copy(isOrdered = ordered)
+    }
+
+    fun onImageUrlChange(input: String) {
+        uiState = uiState.copy(imageUrl = input)
     }
 
     // --- Dynamic Task Handling ---

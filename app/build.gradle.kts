@@ -88,6 +88,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.57.2")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
+    implementation("androidx.compose.material:material-icons-extended")
 }
 java {
     toolchain {

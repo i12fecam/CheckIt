@@ -50,5 +50,5 @@ object Profile : CheckItDestination{
 }
 
 fun allCheckItDestination(): List<CheckItDestination>{
-    return listOf<CheckItDestination>(Login, Registration,Profile)
+    return listOf<CheckItDestination>(Login, Registration,Profile, NewChallenge, ChallengeTasks)
 }
