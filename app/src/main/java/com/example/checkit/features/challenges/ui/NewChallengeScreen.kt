@@ -105,7 +105,7 @@ fun NewChallengeContent(
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(20.dp),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 120.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
@@ -143,7 +143,11 @@ fun NewChallengeContent(
             }
 
             itemsIndexed(uiState.tasks) { index, task ->
-                TaskCardRefined(index = index, task = task, onUpdate = { updated -> onUpdateTask(index, updated) }, onRemove = { onRemoveTask(index) })
+                TaskCardRefined(index = index,
+                    task = task,
+                    onUpdate = { updated -> onUpdateTask(index, updated) },
+                    onRemove = { onRemoveTask(index) })
+
             }
 
             item {
@@ -154,7 +158,7 @@ fun NewChallengeContent(
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3498DB))
                 ) {
-                    Text("PUBLICAR DESAFÍO", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("PUBLICAR DESAFÍO", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -186,41 +190,64 @@ fun TaskCardRefined(index: Int, task: TaskRequest, onUpdate: (TaskRequest) -> Un
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier.size(60.dp).clip(RoundedCornerShape(12.dp)).background(Color(0xFFF1F5F9)),
-                contentAlignment = Alignment.Center
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
             ) {
-                // Sostituita icona Image con Info (standard)
-                Icon(Icons.Default.Info, contentDescription = null, tint = Color.Gray)
-            }
+                Box(modifier = Modifier.size(50.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(CheckItBlue.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("${index + 1}", color = CheckItBlue, fontWeight = FontWeight.Bold)
+                }
+                Spacer(modifier = Modifier.width(12.dp))
 
-            Column(modifier = Modifier.weight(1f).padding(horizontal = 12.dp)) {
-                BasicTextField(
+                OutlinedTextField(
                     value = task.name,
                     onValueChange = { onUpdate(task.copy(name = it)) },
-                    textStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.Black),
-                    modifier = Modifier.fillMaxWidth()
+                    placeholder = { Text("Escribe el nombre o indicio...") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                    textStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedBorderColor = InputGray,
+                        focusedBorderColor = CheckItBlue
+                    )
                 )
-                if (task.name.isEmpty()) Text("Titulo de la Tarea", color = Color.LightGray, fontSize = 14.sp)
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("TEXT", "QR", "NFC").forEach { type ->
-                        Text(
-                            text = type,
-                            fontSize = 10.sp,
-                            color = if (task.type == type) CheckItBlue else Color.Gray,
-                            fontWeight = if (task.type == type) FontWeight.Bold else FontWeight.Normal,
-                            modifier = Modifier.background(if (task.type == type) CheckItBlue.copy(alpha = 0.1f) else Color.Transparent, RoundedCornerShape(4.dp)).padding(horizontal = 4.dp)
-                        )
-                    }
+                IconButton(onClick = onRemove) {
+                    Icon(Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = Color.Red.copy(alpha = 0.7f))
                 }
             }
 
-            IconButton(onClick = onRemove) {
-                Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red.copy(alpha = 0.6f))
+            Text(
+                "Metodo de Validación:",
+                fontSize = 11.sp,
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
+                color = Color.Gray,
+                fontWeight = FontWeight.Bold
+            )
+
+            // Selettore Tipologia migliorato (Touch targets più grandi)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                listOf("TEXT", "QR", "NFC").forEach { type ->
+                    FilterChip(
+                        selected = task.type == type,
+                        onClick = { onUpdate(task.copy(name = task.name, type = type)) },
+                        label = { Text(type, fontSize = 12.sp) },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = CheckItBlue,
+                            selectedLabelColor = Color.White
+                        )
+                    )
+                }
             }
         }
     }
