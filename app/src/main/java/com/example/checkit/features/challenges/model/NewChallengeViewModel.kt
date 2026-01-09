@@ -15,6 +15,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
+import android.content.Context
+import android.util.Base64
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.InputStream
 // --- Data Classes for State and Events ---
 
 // Represents the current state of the Login screen UI
@@ -35,6 +39,7 @@ sealed class NewChallengeEvent {
 @HiltViewModel
 class NewChallengeViewModel @Inject constructor(
     private val challengeService: ChallengeService,
+    @ApplicationContext private val context: Context
 ): ViewModel(){
     private val TAG: String = "NewChallengeViewModel"
 
@@ -94,6 +99,22 @@ class NewChallengeViewModel @Inject constructor(
         uiState = uiState.copy(tasks = newList)
     }
 
+
+    private fun uriToBase64(uriString: String): String? {
+        return try {
+            val uri = android.net.Uri.parse(uriString)
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            val bytes = inputStream?.readBytes()
+            inputStream?.close()
+            if (bytes != null) {
+                Base64.encodeToString(bytes, Base64.NO_WRAP) // Conversione in Base64
+            } else null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error convertendo imagen a Base64", e)
+            null
+        }
+    }
+
     // --- Login Logic ---
     fun saveChallenge() {
         // Prevent multiple simultaneous login attempts
@@ -117,11 +138,17 @@ class NewChallengeViewModel @Inject constructor(
         viewModelScope.launch {
             // Simulate a network call via the repository
             try {
+                // Convertiamo l'URI locale in stringa Base64 prima dell'invio
+                val imageEncoded = if (uiState.imageUrl.isNotEmpty()) {
+                    uriToBase64(uiState.imageUrl)
+                } else null
+
                 val createChallengeRequest = CreateChallengeRequest(
                     uiState.title,
                     uiState.description,
                     isOrdered = uiState.isOrdered,
                     tasks = uiState.tasks,
+                    // imageBase64 = imageEncoded // Assicurati di aggiungere questo campo nel DTO
                 )
 
 
@@ -154,5 +181,6 @@ class NewChallengeViewModel @Inject constructor(
 
         }
     }
+
 
 }

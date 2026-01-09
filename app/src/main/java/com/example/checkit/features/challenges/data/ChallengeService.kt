@@ -24,7 +24,8 @@ data class CreateChallengeRequest(
     val name: String,
     val description: String,
     val isOrdered: Boolean,       // <-- Added
-    val tasks: List<TaskRequest>  // <-- Added
+    val tasks: List<TaskRequest>,  // <-- Added
+    val imageBase64: String? = null // <--Field for the image
 )
 
 @Serializable

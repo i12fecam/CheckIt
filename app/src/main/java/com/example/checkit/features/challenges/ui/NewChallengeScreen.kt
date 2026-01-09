@@ -1,6 +1,7 @@
 package com.example.checkit.features.challenges.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -13,12 +14,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +33,11 @@ import com.example.checkit.features.challenges.model.NewChallengeEvent
 import com.example.checkit.features.challenges.model.NewChallengeUiState
 import com.example.checkit.features.challenges.model.NewChallengeViewModel
 import kotlinx.coroutines.flow.collectLatest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import coil.compose.AsyncImage
+import androidx.compose.material.icons.filled.Close
+
 
 val CheckItBlue = Color(0xFF53678B)
 val LightBackground = Color(0xFFF8FAFC)
@@ -83,6 +91,16 @@ fun NewChallengeContent(
     onSave: () -> Unit,
     onBack: () -> Unit
 ) {
+
+    // Launcher per selezionare l'immagine dalla galleria
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            onImageUrlChange(uri.toString()) // Salviamo l'URI locale nello stato
+        }
+    }
+
     Scaffold(
         containerColor = LightBackground,
         topBar = {
@@ -114,15 +132,62 @@ fun NewChallengeContent(
             item {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(
-                        modifier = Modifier.size(140.dp).clip(RoundedCornerShape(20.dp)).background(Color.White).padding(4.dp),
+                        modifier = Modifier
+                            .size(140.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Color.White)
+                            .padding(4.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp)).background(Color(0xFFEDF2F7)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            // Sostituita icona PhotoCamera con Edit (standard)
-                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(40.dp), tint = CheckItBlue)
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            if (uiState.imageUrl.isNotEmpty()) {
+                                // Anteprima dell'immagine selezionata
+                                AsyncImage(
+                                    model = uiState.imageUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .clickable { launcher.launch("image/*") },
+                                    contentScale = ContentScale.Crop
+                                )
+
+
+                                // PULSANTE "X" PER REMOVER EL'IMMAGINE
+                                IconButton(
+                                    onClick = { onImageUrlChange("") }, // Resetta l'URL nello stato
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(4.dp)
+                                        .size(24.dp)
+                                        .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Eliminar imagen",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            } else {
+                                // Placeholder se vuoto
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(Color(0xFFEDF2F7))
+                                        .clickable { launcher.launch("image/*") },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.PhotoCamera,
+                                        contentDescription = "Icono de cámara",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = CheckItBlue
+                                    )
+                                }
+                            }
+
                         }
                     }
                     Text("Subir Imagen", modifier = Modifier.padding(top = 8.dp), fontWeight = FontWeight.Bold, fontSize = 18.sp)

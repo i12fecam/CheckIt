@@ -93,6 +93,12 @@ dependencies {
 
     //to visualize images as photo or URLs
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // For image management (Coil)
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // For icons such as PhotoCamera
+    implementation("androidx.compose.material:material-icons-extended")
 }
 java {
     toolchain {
