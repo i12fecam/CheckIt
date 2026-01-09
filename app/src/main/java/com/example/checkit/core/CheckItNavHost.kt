@@ -45,7 +45,11 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         composable( route = NewChallenge.route){
             NewChallengeScreen(onCreation = {
                 navController.navigate(ChallengeTasks.route)
-            })
+            },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(
             route = ChallengeTasks.routeWithArgs,

@@ -90,6 +90,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
 
     implementation("androidx.compose.material:material-icons-extended")
+
+    //to visualize images as photo or URLs
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }
 java {
     toolchain {

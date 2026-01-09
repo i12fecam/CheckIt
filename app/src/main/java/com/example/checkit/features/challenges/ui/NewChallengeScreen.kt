@@ -38,7 +38,8 @@ val InputGray = Color(0xFFE2E8F0)
 @Composable
 fun NewChallengeScreen(
     viewModel: NewChallengeViewModel = hiltViewModel(),
-    onCreation: () -> Unit
+    onCreation: () -> Unit,
+    onBack: () -> Unit
 ) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
@@ -62,7 +63,8 @@ fun NewChallengeScreen(
         onAddTask = viewModel::addTask,
         onUpdateTask = viewModel::updateTask,
         onRemoveTask = viewModel::removeTask,
-        onSave = viewModel::saveChallenge
+        onSave = viewModel::saveChallenge,
+        onBack = onBack
     )
 }
 
@@ -78,7 +80,8 @@ fun NewChallengeContent(
     onAddTask: () -> Unit,
     onUpdateTask: (Int, TaskRequest) -> Unit,
     onRemoveTask: (Int) -> Unit,
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    onBack: () -> Unit
 ) {
     Scaffold(
         containerColor = LightBackground,
@@ -86,7 +89,7 @@ fun NewChallengeContent(
             CenterAlignedTopAppBar(
                 title = { Text("Nueva Sfida", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
                     }
                 },
@@ -276,6 +279,7 @@ fun NewChallengePreview() {
         onAddTask = {},
         onUpdateTask = { _, _ -> },
         onRemoveTask = {},
-        onSave = {}
+        onSave = {},
+        onBack = {}
     )
 }
