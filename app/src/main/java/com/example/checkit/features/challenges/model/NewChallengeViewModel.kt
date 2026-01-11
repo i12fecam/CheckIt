@@ -74,9 +74,10 @@ class NewChallengeViewModel @Inject constructor(
     // --- Dynamic Task Handling ---
     fun addTask() {
         val newTask = TaskRequest(
-            name = "Nueva Tarea ${uiState.tasks.size + 1}", //Default Name
+            name = "Tarea ${uiState.tasks.size + 1}", //Default Name
             type = "TEXT", // Default
             taskOrder = uiState.tasks.size + 1,
+            textClue = "",
             qrAnswer = null,
             nfcAnswer = null,
             textAnswer = "" // Epty for deafault if is a TEXT
@@ -148,7 +149,7 @@ class NewChallengeViewModel @Inject constructor(
                     uiState.description,
                     isOrdered = uiState.isOrdered,
                     tasks = uiState.tasks,
-                    // imageBase64 = imageEncoded // Assicurati di aggiungere questo campo nel DTO
+                    imageBase64 = imageEncoded
                 )
 
 

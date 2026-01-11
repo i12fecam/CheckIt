@@ -14,6 +14,7 @@ data class TaskRequest(
     // Optional fields for responses (nullable depending on the type)
     val qrAnswer: String? = null,
     val nfcAnswer: String? = null,
+    val textClue: String = "", // Added for Clues
     val textAnswer: String? = null
 )
 
