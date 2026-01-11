@@ -37,6 +37,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.ui.text.style.TextAlign
 
 
 val FigmaPurple = Color(0xFF6A4DFF)
@@ -91,21 +92,15 @@ fun NewChallengeContent(
     onSave: () -> Unit,
     onBack: () -> Unit
 ) {
-
-    // Launcher per selezionare l'immagine dalla galleria
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        if (uri != null) {
-            onImageUrlChange(uri.toString()) // Salviamo l'URI locale nello stato
-        }
-    }
+    ) { uri -> if (uri != null) onImageUrlChange(uri.toString()) }
 
     Scaffold(
         containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Nueva Sfida", color = Color.White, fontWeight = FontWeight.Bold) },
+                title = { /* Titolo rimosso come richiesto */ },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
@@ -116,102 +111,96 @@ fun NewChallengeContent(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(bottom = 120.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            //HEADER IMMAGE
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth().height(200.dp).background(FigmaPurple),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Card(
-                        onClick = { launcher.launch("image/*") },
-                        modifier = Modifier.size(260.dp, 150.dp),
-                        shape = RoundedCornerShape(24.dp),
-                        colors = CardDefaults.cardColors(containerColor = FigmaTeal)
+        // Usiamo una Column per separare la lista dai pulsanti statici
+        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+
+            LazyColumn(
+                modifier = Modifier.weight(1f), // La lista occupa lo spazio restante e scorre
+                contentPadding = PaddingValues(bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // HEADER IMMAGE CON DECORAZIONI
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().height(240.dp).background(FigmaPurple),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            if (uiState.imageUrl.isNotEmpty()) {
-                                AsyncImage(
-                                    model = uiState.imageUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
-                                )
-                            } else {
-                                Text("+ Añadir una Imagen", color = Color.White, fontWeight = FontWeight.Bold)
+                        // Cerchi decorativi sfocati (Foto 2)
+                        Box(modifier = Modifier.size(150.dp).offset(x = (-100).dp, y = (-50).dp).background(Color.White.copy(alpha = 0.15f), CircleShape))
+                        Box(modifier = Modifier.size(100.dp).offset(x = 80.dp, y = 40.dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
+
+                        Card(
+                            onClick = { launcher.launch("image/*") },
+                            modifier = Modifier.size(280.dp, 160.dp),
+                            shape = RoundedCornerShape(24.dp),
+                            colors = CardDefaults.cardColors(containerColor = FigmaTeal),
+                            elevation = CardDefaults.cardElevation(8.dp)
+                        ) {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                if (uiState.imageUrl.isNotEmpty()) {
+                                    AsyncImage(model = uiState.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                                } else {
+                                    Text("+ Añadir una Imagen", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            item {
-                Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StyledTextField(
-                        value = uiState.title,
-                        onValueChange = onTitleChange,
-                        placeholder = "Nombre del desafío",
-                        label = "${uiState.title.length}/30"
-                    )
-                    StyledTextField(
-                        value = uiState.description,
-                        onValueChange = onDescriptionChange,
-                        placeholder = "Descripción del desafío",
-                        label = "${uiState.description.length}/250"
-                    )
+                // CAMPI TITOLO E DESCRIZIONE SFIDA
+                item {
+                    Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        StyledTextField(value = uiState.title, onValueChange = onTitleChange, placeholder = "Nombre del desafío", maxChar = 30)
+                        StyledTextField(value = uiState.description, onValueChange = onDescriptionChange, placeholder = "Descripción del desafío", maxChar = 250)
+                    }
+                }
+
+                // LISTA DELLE TASK (SCORREVOLE)
+                itemsIndexed(uiState.tasks) { index, task ->
+                    TaskCardRefined(index = index, task = task, onUpdate = { updated -> onUpdateTask(index, updated) }, onRemove = { onRemoveTask(index) })
                 }
             }
 
-            // TASK LIST
-            itemsIndexed(uiState.tasks) { index, task ->
-                TaskCardRefined(
-                    index = index,
-                    task = task,
-                    onUpdate = { updated -> onUpdateTask(index, updated) },
-                    onRemove = { onRemoveTask(index) }
-                )
-            }
+            // PULSANTI STATICI (RIMANGONO FISSI IN FONDO)
+            Column(
+                modifier = Modifier.fillMaxWidth().background(Color.White).padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(
+                    onClick = onAddTask,
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = FigmaBlue),
+                    shape = RoundedCornerShape(25.dp)
+                ) { Text("Añadir altra Tarea", fontWeight = FontWeight.Bold) }
 
-            // BOTTONI FINALI
-            item {
-                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Button(
-                        onClick = onAddTask,
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = FigmaBlue),
-                        shape = RoundedCornerShape(25.dp)
-                    ) { Text("Añadir otra Tarea") }
-
-                    Button(
-                        onClick = onSave,
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = FigmaBlue),
-                        shape = RoundedCornerShape(25.dp)
-                    ) { Text("Crear Desafío") }
-                }
+                Button(
+                    onClick = onSave,
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = FigmaBlue),
+                    shape = RoundedCornerShape(25.dp)
+                ) { Text("Crear Desafío", fontWeight = FontWeight.Bold) }
             }
         }
     }
 }
 
-
 @Composable
-fun StyledTextField(value: String, onValueChange: (String) -> Unit, placeholder: String, label: String) {
-    Surface(shadowElevation = 4.dp, shape = RoundedCornerShape(25.dp)) {
+fun StyledTextField(value: String, onValueChange: (String) -> Unit, placeholder: String, maxChar: Int) {
+    Surface(shadowElevation = 6.dp, shape = RoundedCornerShape(50.dp), modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = value,
-            onValueChange = onValueChange,
-            placeholder = { Text(placeholder) },
+            onValueChange = { if (it.length <= maxChar) onValueChange(it) },
+            placeholder = { Text(placeholder, color = Color.Gray) },
             modifier = Modifier.fillMaxWidth(),
-            trailingIcon = { Text(label, fontSize = 10.sp, color = Color.Gray) },
-            shape = RoundedCornerShape(25.dp),
+            trailingIcon = {
+                Text("${value.length}/$maxChar", fontSize = 12.sp, color = Color.LightGray, modifier = Modifier.padding(end = 16.dp))
+            },
+            shape = RoundedCornerShape(50.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = FigmaBlue
+                focusedBorderColor = FigmaBlue,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
             )
         )
     }
@@ -221,46 +210,94 @@ fun StyledTextField(value: String, onValueChange: (String) -> Unit, placeholder:
 fun TaskCardRefined(index: Int, task: TaskRequest, onUpdate: (TaskRequest) -> Unit, onRemove: () -> Unit) {
     Card(
         modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            // RIGA SUPERIORE: NOME TASK IN PILLOLA
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Tarea ${index + 1}:", fontWeight = FontWeight.Bold, color = Color.Gray)
-                Spacer(Modifier.width(8.dp))
-                // Campo Titolo Task
-                BasicTextField(
-                    value = task.name,
-                    onValueChange = { onUpdate(task.copy(name = it)) },
-                    textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                )
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = onRemove) {
-                    Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red)
+                Text("Tarea ${index + 1}: ", color = Color.DarkGray, fontSize = 14.sp)
+                Surface(shape = RoundedCornerShape(50), color = Color(0xFFE0E0E0), modifier = Modifier.height(32.dp)) {
+                    BasicTextField(
+                        value = task.name,
+                        onValueChange = { onUpdate(task.copy(name = it)) },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp).widthIn(min = 100.dp),
+                        textStyle = TextStyle(fontSize = 14.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                    )
                 }
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = onRemove) { Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray) }
             }
 
-            // CAMPO PISTA (CLUE) - Richiesto dal Paper
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = task.textClue,
-                onValueChange = { onUpdate(task.copy(textClue = it)) },
-                placeholder = { Text("Descripción de la tarea / Pista", fontSize = 12.sp) },
-                modifier = Modifier.fillMaxWidth().height(80.dp),
-                shape = RoundedCornerShape(12.dp)
-            )
+            Spacer(Modifier.height(12.dp))
 
-            // Selettore Tipo (Incluso GPS come da Paper)
-            Row(Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("QR", "NFC", "TEXT", "GPS").forEach { type ->
-                    FilterChip(
-                        selected = task.type == type,
-                        onClick = { onUpdate(task.copy(type = type)) },
-                        label = { Text(type, fontSize = 10.sp) }
+            // BOX DESCRIZIONE: GRIGIO PIÙ SCURO
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFFE2E8F0), // Colore leggermente più scuro per contrasto
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    BasicTextField(
+                        value = task.textClue,
+                        onValueChange = { if (it.length <= 200) onUpdate(task.copy(textClue = it)) },
+                        modifier = Modifier.fillMaxWidth().height(60.dp),
+                        textStyle = TextStyle(color = Color.Black, fontSize = 14.sp),
+                        decorationBox = { innerTextField ->
+                            if (task.textClue.isEmpty()) {
+                                // PLACEHOLDER PIÙ VISIBILE
+                                Text("Descripción de la tarea", color = Color(0xFF616161), fontSize = 13.sp)
+                            }
+                            innerTextField()
+                        }
+                    )
+                    Text(
+                        text = "${task.textClue.length}/200",
+                        textAlign = TextAlign.End, // Corretto l'allineamento
+                        modifier = Modifier.fillMaxWidth(),
+                        fontSize = 10.sp,
+                        color = Color.Gray
                     )
                 }
             }
+
+            // TESTO TIPO TAREA PIÙ EVIDENTE
+            Text(
+                "Tipo de tarea:",
+                fontSize = 13.sp,
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = Color.Black,
+                fontWeight = FontWeight.ExtraBold
+            )
+
+            // CHIP PER LE TECNOLOGIE
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("Escaneo QR", "NFC", "Entrada de Texto").forEach { label ->
+                    val typeMap = mapOf("Escaneo QR" to "QR", "NFC" to "NFC", "Entrada de Texto" to "TEXT")
+                    FigmaChip(text = label, selected = task.type == typeMap[label]) {
+                        onUpdate(task.copy(type = typeMap[label] ?: "TEXT"))
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun FigmaChip(text: String, selected: Boolean, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        color = if (selected) FigmaTeal else Color(0xFFE0E0E0).copy(alpha = 0.5f),
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.height(36.dp)
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold, // Testo reso più visibile
+            color = if (selected) Color.White else Color.Black
+        )
     }
 }
