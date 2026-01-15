@@ -3,6 +3,7 @@ package com.example.checkit.core
 import android.content.Context
 import com.example.checkit.core.RetrofitClient.BASE_URL
 import com.example.checkit.features.challenges.data.ChallengeService
+import com.example.checkit.features.profile.data.ProfileService
 import com.example.checkit.features.registration.data.AuthService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -133,6 +134,14 @@ object AppModule {
         @ProtectedRetrofit retrofit: Retrofit // Inject the fully configured Retrofit instance
     ): ChallengeService {
         return retrofit.create(ChallengeService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileServiceService(
+        @ProtectedRetrofit retrofit: Retrofit // Inject the fully configured Retrofit instance
+    ): ProfileService {
+        return retrofit.create(ProfileService::class.java)
     }
 
 

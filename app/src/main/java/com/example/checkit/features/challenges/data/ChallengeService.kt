@@ -40,4 +40,5 @@ interface ChallengeService {
     @POST("api/challenges")
     suspend fun createChallenge(@Body loginRequest: CreateChallengeRequest): BasicResponse
 
+
 }
