@@ -47,7 +47,7 @@ val FigmaBlue = Color(0xFF3B7CFF)
 @Composable
 fun NewChallengeScreen(
     viewModel: NewChallengeViewModel = hiltViewModel(),
-    onCreation: () -> Unit,
+    onCreation: (Long) -> Unit,
     onBack: () -> Unit
 ) {
     val uiState = viewModel.uiState
@@ -56,7 +56,7 @@ fun NewChallengeScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.events.collectLatest { event ->
             when (event) {
-                is NewChallengeEvent.createdCorrectly -> onCreation()
+                is NewChallengeEvent.createdCorrectly -> onCreation(event.challengeId)
                 is NewChallengeEvent.ShowError -> snackbarHostState.showSnackbar(event.message)
             }
         }
