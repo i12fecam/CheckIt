@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.checkit.core.TokenManager
 import com.example.checkit.features.registration.data.AuthService
 import com.example.checkit.features.registration.data.LoginRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ sealed class LoginEvent {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authService: AuthService,
+    private val tokenManager: TokenManager
 ): ViewModel(){
     private val TAG: String = "LoginViewModel"
 
@@ -83,6 +85,7 @@ class LoginViewModel @Inject constructor(
                 when (loginResponse.errorResponse) {
                     null -> {
                         // Successful
+                        tokenManager.saveTokens("${loginResponse.token}","${loginResponse.username}")
                         _events.emit(LoginEvent.NavigateToHome)
                     }
                     else -> {

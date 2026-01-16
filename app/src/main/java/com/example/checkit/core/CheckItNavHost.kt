@@ -1,5 +1,6 @@
 package com.example.checkit.core
 
+import ProfileDetailScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -62,6 +63,13 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
             )
         }
 
+
+        composable(route = Profile.route){
+            ProfileDetailScreen(
+                onLogin ={},
+                onNavigateToRegistration ={},
+            )
+        }
         composable(
             route = ChallengeTasks.routeWithArgs,
             arguments = ChallengeTasks.arguments,

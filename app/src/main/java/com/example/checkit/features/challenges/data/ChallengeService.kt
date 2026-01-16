@@ -68,4 +68,5 @@ interface ChallengeService {
     @GET("api/challenges")
     suspend fun getAllChallenges(): List<ChallengeDto>
 
+
 }

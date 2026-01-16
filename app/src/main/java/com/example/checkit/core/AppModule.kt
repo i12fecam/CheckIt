@@ -3,6 +3,7 @@ package com.example.checkit.core
 import android.content.Context
 import com.example.checkit.core.RetrofitClient.BASE_URL
 import com.example.checkit.features.challenges.data.ChallengeService
+import com.example.checkit.features.profile.data.ProfileService
 import com.example.checkit.features.registration.data.AuthService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -13,6 +14,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -48,6 +50,12 @@ object AppModule {
         return TokenManagerImpl(context)
     }
 
+    val logging = HttpLoggingInterceptor()
+
+    val client = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .build()
+
 
     // Cliente OkHttp para peticiones públicas (sin token)
     @Provides
@@ -55,7 +63,13 @@ object AppModule {
     @PublicClient
     fun providePublicHttpClient(): OkHttpClient {
         // Simple client without interceptor
-        return OkHttpClient.Builder().build()
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        return OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
+
     }
 
     // Cliente OkHttp para peticiones protegidas (con token)
@@ -63,10 +77,13 @@ object AppModule {
     @Singleton
     @ProtectedClient
     fun provideProtectedHttpClient(tokenManager: TokenManager): OkHttpClient {
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(tokenManager)) // <-- El interceptor añade el JWT
-            // ... otros interceptors (logging)
+            .addInterceptor(logging)
             .build()
+
     }
 
     /**
@@ -133,6 +150,14 @@ object AppModule {
         @ProtectedRetrofit retrofit: Retrofit // Inject the fully configured Retrofit instance
     ): ChallengeService {
         return retrofit.create(ChallengeService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileServiceService(
+        @ProtectedRetrofit retrofit: Retrofit // Inject the fully configured Retrofit instance
+    ): ProfileService {
+        return retrofit.create(ProfileService::class.java)
     }
 
 

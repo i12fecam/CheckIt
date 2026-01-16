@@ -12,7 +12,7 @@ interface CheckItDestination {
 
 object Login: CheckItDestination{
     override val icon = 1
-    override val route = "profile"
+    override val route = "login"
     override val showNavigationBar = false
 }
 
