@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.checkit.features.challenges.ui.MyChallengeListScreen
 import com.example.checkit.features.challenges.ui.NewChallengeScreen
 import com.example.checkit.features.registration.ui.LoginScreen
 import com.example.checkit.features.registration.ui.RegistrationScreen
@@ -52,6 +53,16 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
                 }
             )
         }
+        composable(route = MyChallengeList.route) {
+            MyChallengeListScreen(
+                onChallengeClick = { challengeId ->
+                    // Aquí defines a dónde ir cuando el usuario toca un desafío
+                    // Usamos el ID (Long) para navegar al detalle o tareas
+                    navController.navigate("${ChallengeTasks.route}/$challengeId")
+                }
+            )
+        }
+
 
         composable(route = Profile.route){
             ProfileDetailScreen(
