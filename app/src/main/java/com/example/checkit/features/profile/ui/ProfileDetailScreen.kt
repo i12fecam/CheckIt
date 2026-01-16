@@ -1,4 +1,3 @@
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,13 +17,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -40,15 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.checkit.features.challenges.ui.FigmaPurple
 import com.example.checkit.features.challenges.ui.FigmaTeal
 import com.example.checkit.features.challenges.ui.StyledTextField
 import com.example.checkit.features.profile.model.ProfileDetailEvent
-import com.example.checkit.features.profile.model.ProfileDetailUiState
 import com.example.checkit.features.profile.model.ProfileDetailViewModel
-import com.example.checkit.features.registration.ui.LoginEvent
-import com.example.checkit.features.registration.ui.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -162,12 +154,16 @@ fun ProfileDetailScreen(
                 // Reutilizamos tu StyledTextField pero con labels
                 Column {
                     Text("Nombre Completo", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
-                    StyledTextField(value = uiState.username, onValueChange ={}, placeholder = "Ej. Juan Pérez", maxChar = 30)
+                    StyledTextField(value = uiState.realname, onValueChange ={ viewModel.onRealNameChange(it)}, placeholder = "Ej. Juan Pérez", maxChar = 30)
                 }
 
                 Column {
+                    Text("Email", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
+                    StyledTextField(value = uiState.email, onValueChange ={}, placeholder = "thomas.a.hendricks@example.com", maxChar = 30)
+                }
+                Column {
                     Text("Contraseña", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
-                    StyledTextField(value = uiState.password, onValueChange = {}, placeholder = "Cuéntanos sobre ti...", maxChar = 250)
+                    StyledTextField(value = uiState.password, onValueChange = {viewModel.onPasswordChange(it)}, placeholder = "Cuéntanos sobre ti...", maxChar = 250)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

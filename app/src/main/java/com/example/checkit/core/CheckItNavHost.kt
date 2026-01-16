@@ -13,6 +13,9 @@ import com.example.checkit.features.challenges.ui.MyChallengeListScreen
 import com.example.checkit.features.challenges.ui.NewChallengeScreen
 import com.example.checkit.features.registration.ui.LoginScreen
 import com.example.checkit.features.registration.ui.RegistrationScreen
+import com.example.checkit.features.challenges.ui.ChallengeDetailScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @Composable
 fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues){
@@ -46,14 +49,29 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         }
 
         composable( route = NewChallenge.route){
-            NewChallengeScreen(onCreation = {
-                navController.navigate(ChallengeTasks.route)
+            NewChallengeScreen(onCreation = { id ->
+                navController.navigate("challenge_detail/$id"){
+                    popUpTo(NewChallenge.route){ inclusive = true }
+                }
             },
                 onBack = {
                     navController.popBackStack()
                 }
             )
         }
+
+        // NUOVA ROTTA: Dettaglio Sfida (Ruta Romana)
+        composable(
+            route = "challenge_detail/{challengeId}",
+            arguments = listOf(navArgument("challengeId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getLong("challengeId") ?: 0L
+            ChallengeDetailScreen(
+                onBack = { navController.popBackStack() }
+                // Passa l'id al ViewModel del dettaglio se necessario
+            )
+        }
+
         composable(route = MyChallengeList.route) {
             MyChallengeListScreen(
                 onChallengeClick = { challengeId ->
