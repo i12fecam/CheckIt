@@ -19,6 +19,9 @@ import com.example.checkit.features.profile.data.ChangePasswordRequest
 import com.example.checkit.features.profile.data.ProfileService
 import com.example.checkit.features.registration.data.AuthService
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
 
 // --- Data Classes for State and Events ---
 
@@ -51,6 +54,26 @@ class ProfileDetailViewModel @Inject constructor(
     // Use SharedFlow for single-time events (like navigation or showing a Toast/Snackbar)
     private val _events = MutableSharedFlow<ProfileDetailEvent>()
     val events = _events.asSharedFlow()
+
+    init{
+        loadData()
+    }
+    fun loadData() {
+        viewModelScope.launch {
+            try {
+                val userDetails = profileService.getOwnUserDetails()
+                uiState = uiState.copy(
+                    username = userDetails.username,
+                    password = userDetails.username
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading data", e)
+            }
+
+        }
+    }
+
+
     //
 //    // --- Event Handlers (User Input) ---
 //
