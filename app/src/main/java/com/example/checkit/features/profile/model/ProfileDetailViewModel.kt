@@ -13,21 +13,17 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 import android.content.Context
-import com.example.checkit.core.TokenManager
 import com.example.checkit.core.TokenManagerImpl
-import com.example.checkit.features.profile.data.ChangePasswordRequest
 import com.example.checkit.features.profile.data.ProfileService
-import com.example.checkit.features.registration.data.AuthService
+import com.example.checkit.features.profile.data.UserDetailsToChange
 import dagger.hilt.android.qualifiers.ApplicationContext
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
 
 // --- Data Classes for State and Events ---
 
 // Represents the current state of the Login screen UI
 data class ProfileDetailUiState(
-    val username: String = "username",
+    val realname: String = "username",
+    val email: String = "email",
     val password: String = "password"
 )
 
@@ -63,8 +59,9 @@ class ProfileDetailViewModel @Inject constructor(
             try {
                 val userDetails = profileService.getOwnUserDetails()
                 uiState = uiState.copy(
-                    username = userDetails.username,
-                    password = userDetails.username
+                    realname = userDetails.username,
+                    password = "***********",
+                    email = userDetails.email
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading data", e)
@@ -78,8 +75,12 @@ class ProfileDetailViewModel @Inject constructor(
 //    // --- Event Handlers (User Input) ---
 //
 
-    fun onUserNameChange(input: String) {
-        uiState = uiState.copy(username = input)
+    fun onRealNameChange(input: String) {
+        uiState = uiState.copy(realname = input)
+    }
+
+    fun onPasswordChange(input: String) {
+        uiState = uiState.copy(password = input)
     }
 
 
@@ -110,8 +111,9 @@ class ProfileDetailViewModel @Inject constructor(
             try {
 
 
-                val createChallengeRequest = ChangePasswordRequest(
-                    newPassword = uiState.password
+                val createChallengeRequest = UserDetailsToChange(
+                    realName = uiState.realname,
+                    password = uiState.password
                 )
 
 

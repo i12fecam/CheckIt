@@ -12,13 +12,13 @@ import retrofit2.http.POST
 @Serializable
 data class OwnUserDetails(
     val username: String,
-    val email: String,
-    val password:String
+    val email: String
 )
 
 @Serializable
-data class ChangePasswordRequest(
-    val newPassword: String
+data class UserDetailsToChange(
+    val realName: String,
+    val password: String
 )
 
 
@@ -27,8 +27,8 @@ interface ProfileService {
     @GET("api/user/info")
     suspend fun getOwnUserDetails(): OwnUserDetails
 
-    @POST("api/user/change-password")
-    suspend fun changeOwnUserPassword(@Body changePasswordRequest: ChangePasswordRequest): BasicResponse
+    @POST("api/user/change-details")
+    suspend fun changeOwnUserPassword(@Body userDetailsToChange: UserDetailsToChange): BasicResponse
 }
 
 
