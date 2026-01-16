@@ -82,6 +82,16 @@ fun CheckItApp() {
                             }
                         }
                     )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                        label = { Text("Mis Desafíos") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = MyChallengeList.route) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                 }
             }
 

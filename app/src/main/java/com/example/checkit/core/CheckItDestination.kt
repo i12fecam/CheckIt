@@ -49,6 +49,13 @@ object Profile : CheckItDestination{
 
 }
 
+object MyChallengeList : CheckItDestination {
+    override val icon = 1 // Puedes cambiar el ID del icono si usas drawables específicos
+    override val route = "myChallengeList"
+    override val showNavigationBar = true
+}
+
 fun allCheckItDestination(): List<CheckItDestination>{
-    return listOf<CheckItDestination>(Login, Registration,Profile, NewChallenge, ChallengeTasks)
+    return listOf<CheckItDestination>(Login, Registration,Profile, NewChallenge, ChallengeTasks,
+        MyChallengeList)
 }
