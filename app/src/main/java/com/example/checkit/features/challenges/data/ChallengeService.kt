@@ -22,9 +22,9 @@ data class TaskRequest(
 data class ChallengeDto(
     val id: Long,
     val name: String,
-    val description: String?,
-    val image: String?,
-    val isOrdered: Boolean,
+    val description: String? = null,
+    val image: String? = null,
+    val isOrdered: Boolean = false,
     val tasks: List<TaskDto> = emptyList()
 )
 @Serializable
