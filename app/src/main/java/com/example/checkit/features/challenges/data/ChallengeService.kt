@@ -53,7 +53,7 @@ data class BasicResponse(
 interface ChallengeService {
 
     @POST("api/challenges")
-    suspend fun createChallenge(@Body loginRequest: CreateChallengeRequest): BasicResponse
+    suspend fun createChallenge(@Body loginRequest: CreateChallengeRequest): ChallengeDto
     // LISTAR desafíos creados por el usuario (GET)
     // Coincide con @GetMapping("/my-created") en tu controlador
     @GET("api/challenges/my-created")

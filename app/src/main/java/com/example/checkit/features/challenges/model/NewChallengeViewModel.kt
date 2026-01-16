@@ -32,7 +32,7 @@ data class NewChallengeUiState(
 
 // Events that trigger a one-time action in the UI
 sealed class NewChallengeEvent {
-    data object createdCorrectly : NewChallengeEvent()
+    data class createdCorrectly(val challengeId: Long) : NewChallengeEvent()
     data class ShowError(val message: String) : NewChallengeEvent()
 }
 
@@ -152,19 +152,9 @@ class NewChallengeViewModel @Inject constructor(
                     imageBase64 = imageEncoded
                 )
 
-
                 val createChallengeResponse = challengeService.createChallenge(createChallengeRequest)
 
-                when (createChallengeResponse.errorMessage) {
-                    null -> {
-                        // Successful
-                        _events.emit(NewChallengeEvent.createdCorrectly)
-                    }
-                    else -> {
-                        // Failed
-                        _events.emit(NewChallengeEvent.ShowError(createChallengeResponse.errorMessage))
-                    }
-                }
+                _events.emit(NewChallengeEvent.createdCorrectly(createChallengeResponse.id))
 
             } catch (e: HttpException) {
                 // 3. Handle HTTP errors (e.g., 401 Unauthorized, 404 Not Found, 500 Server Error)
