@@ -14,13 +14,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 // --- Data Classes for State and Events ---
 
 // Represents the current state of the Login screen UI
 data class LoginUiState(
-    val username: String = "",
+    val email: String = "",
     val password: String = "",
     val isLoading: Boolean = false, // To show a progress indicator
 )
@@ -50,8 +49,8 @@ class LoginViewModel @Inject constructor(
 //
 //    // --- Event Handlers (User Input) ---
 //
-    fun onUsernameChange(input: String) {
-        uiState = uiState.copy(username = input)
+    fun onEmailChange(input: String) {
+        uiState = uiState.copy(email = input)
     }
 
     fun onPasswordChange(input: String) {
@@ -65,7 +64,7 @@ class LoginViewModel @Inject constructor(
         if (uiState.isLoading) return
 
         // Simple validation check
-        if (uiState.username.isBlank() || uiState.password.isBlank()) {
+        if (uiState.email.isBlank() || uiState.password.isBlank()) {
             viewModelScope.launch {
                 _events.emit(LoginEvent.ShowError("Username and password cannot be empty."))
             }
@@ -77,7 +76,7 @@ class LoginViewModel @Inject constructor(
 
             // Simulate a network call via the repository
             try {
-                val loginRequest = LoginRequest(uiState.username,uiState.password)
+                val loginRequest = LoginRequest(uiState.email,uiState.password)
 
                 val loginResponse = authService.login(loginRequest)
 

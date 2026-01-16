@@ -11,8 +11,9 @@ import retrofit2.http.POST
 //Define what a single Task is for the Backend
 @Serializable
 data class OwnUserDetails(
-    val id: Long,
-    val username: String
+    val username: String,
+    val email: String,
+    val password:String
 )
 
 @Serializable

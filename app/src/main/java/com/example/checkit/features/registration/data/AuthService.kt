@@ -8,7 +8,7 @@ import retrofit2.http.POST
 // Request body for /api/auth/login
 @Serializable
 data class LoginRequest(
-    val username: String, // Matches the field name expected by Spring Boot
+    val email: String, // Matches the field name expected by Spring Boot
     val password: String
 )
 

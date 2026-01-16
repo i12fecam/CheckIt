@@ -1,7 +1,6 @@
 package com.example.checkit.features.registration.ui
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,13 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.checkit.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -76,9 +72,9 @@ fun LoginScreen(onLogin: () -> Unit, onNavigateToRegistration: () -> Unit, viewM
 
             // Email TextField
             OutlinedTextField(
-                value = uiState.username,
-                onValueChange = { viewModel.onUsernameChange(it) },
-                label = { Text("Nombre de usuario") },
+                value = uiState.email,
+                onValueChange = { viewModel.onEmailChange(it) },
+                label = { Text("Email") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
