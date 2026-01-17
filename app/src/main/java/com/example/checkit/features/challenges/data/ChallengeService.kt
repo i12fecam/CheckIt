@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.DELETE
 
 
 //Define what a single Task is for the Backend
@@ -76,10 +77,17 @@ interface ChallengeService {
     @GET("api/challenges")
     suspend fun getAllChallenges(): List<ChallengeDto>
 
+    // New method to get details about a specific challenge
+    @GET("api/challenges/{id}")
+    suspend fun getChallengeDetail(@Path("id") challengeId: Long): ChallengeDto
+
     @POST("api/challenges/{id}/follow")
     suspend fun followChallenge(@Path("id") id: Long): BasicResponse
 
     @GET("api/challenges/{id}")
     suspend fun getChallengeById(@Path("id") id: Long): ChallengeDto
+
+    @DELETE("api/challenges/{id}")
+    suspend fun deleteChallenge(@Path("id") id: Long): BasicResponse
 
 }
