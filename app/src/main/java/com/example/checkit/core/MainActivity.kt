@@ -92,6 +92,16 @@ fun CheckItApp() {
                             }
                         }
                     )
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                        label = { Text("Buscar") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = ExploreChallenges.route) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                 }
             }
 

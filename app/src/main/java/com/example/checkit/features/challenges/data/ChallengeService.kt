@@ -1,7 +1,6 @@
 package com.example.checkit.features.challenges.data
 
 
-
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -27,12 +26,17 @@ data class ChallengeDto(
     val description: String? = null,
     val image: String? = null,
     val isOrdered: Boolean = false,
-    val tasks: List<TaskSmallDto> = emptyList()
+    val tasks: List<TaskSmallDto> = emptyList(),
+    val authorName: String? = "CheckIt Team",
+    val completionCount: Int = 0
 )
 @Serializable
 data class TaskSmallDto(
     val id: Long,
-    val name: String
+    val name: String,
+    // NUEVOS CAMPOS (Opcionales para no romper el listado anterior)
+    val type: String? = null,
+    val taskOrder: Int? = null
 )
 
 //Update the main request to include everything
@@ -91,6 +95,11 @@ interface ChallengeService {
 
     @GET("api/tasks/{taskId}")
     suspend fun getTaskById(@Path("taskId")taskId: Long): TaskDetailDto
+    @POST("api/challenges/{id}/follow")
+    suspend fun followChallenge(@Path("id") id: Long): BasicResponse
+
+    @GET("api/challenges/{id}")
+    suspend fun getChallengeById(@Path("id") id: Long): ChallengeDto
 
     @POST("/tasks/{taskId}/complete")
     suspend fun completeTask(taskId: Long,@Body userResponse: String): String
