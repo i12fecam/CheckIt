@@ -46,7 +46,7 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileDetailScreen(
-    onLogin: () -> Unit, onNavigateToRegistration: () -> Unit, viewModel: ProfileDetailViewModel = hiltViewModel()
+    onCloseSession: () -> Unit, viewModel: ProfileDetailViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
@@ -183,7 +183,10 @@ fun ProfileDetailScreen(
 
                 // Botón de logout
                 Button(
-                    onClick = {},
+                    onClick = {
+                        viewModel.logout();
+                        onCloseSession()
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),

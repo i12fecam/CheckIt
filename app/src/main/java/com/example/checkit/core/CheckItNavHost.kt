@@ -101,8 +101,9 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
 
         composable(route = Profile.route){
             ProfileDetailScreen(
-                onLogin ={},
-                onNavigateToRegistration ={},
+                onCloseSession = {
+                    navController.navigate(Login.route)
+                },
             )
         }
         composable(

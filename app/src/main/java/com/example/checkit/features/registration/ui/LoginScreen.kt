@@ -93,12 +93,6 @@ fun LoginScreen(onLogin: () -> Unit, onNavigateToRegistration: () -> Unit, viewM
                 singleLine = true
             )
 
-            // Forgot Password link
-            Text(
-                text = "¿Olvidaste la contraseña?",
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
 
             // Sign In Button
             Button(
