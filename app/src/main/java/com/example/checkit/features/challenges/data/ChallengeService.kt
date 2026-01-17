@@ -1,10 +1,12 @@
 package com.example.checkit.features.challenges.data
 
 
+
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 //Define what a single Task is for the Backend
 @Serializable
@@ -25,10 +27,10 @@ data class ChallengeDto(
     val description: String? = null,
     val image: String? = null,
     val isOrdered: Boolean = false,
-    val tasks: List<TaskDto> = emptyList()
+    val tasks: List<TaskSmallDto> = emptyList()
 )
 @Serializable
-data class TaskDto(
+data class TaskSmallDto(
     val id: Long,
     val name: String
 )
@@ -49,6 +51,25 @@ data class BasicResponse(
     val errorMessage: String?
 
 )
+@Serializable
+data class TaskDetailDto(
+    val challengeID: Long,
+    val id: Long,
+    val name: String,
+    val taskOrder: Int,
+    val textClue: List<String>,
+    val nCompletions: Long,
+    val completed: Boolean,
+    val type: String
+
+)
+
+@Serializable
+data class CompleteTaskRequest(
+    val userResponse: String,
+)
+
+
 
 interface ChallengeService {
 
@@ -68,5 +89,13 @@ interface ChallengeService {
     @GET("api/challenges")
     suspend fun getAllChallenges(): List<ChallengeDto>
 
+    @GET("api/tasks/{taskId}")
+    suspend fun getTaskById(@Path("taskId")taskId: Long): TaskDetailDto
 
+    @POST("/tasks/{taskId}/complete")
+    suspend fun completeTask(taskId: Long,@Body userResponse: String): String
 }
+
+
+
+
