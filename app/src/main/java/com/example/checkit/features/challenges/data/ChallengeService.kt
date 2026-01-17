@@ -72,6 +72,9 @@ interface ChallengeService {
     @GET("api/challenges/my-saved")
     suspend fun getMySavedChallenges(): List<ChallengeDto>
 
+    @GET("api/challenges/in-progress")
+    suspend fun getMyInProgressChallenges(): List<ChallengeDto>
+
     // LISTAR todos los desafíos (Explorar)
     @GET("api/challenges")
     suspend fun getAllChallenges(): List<ChallengeDto>

@@ -84,7 +84,7 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         composable(route = ExploreChallenges.route) {
             ExploreChallengesScreen(
                 onChallengeClick = { id ->
-                    navController.navigate("${ChallengeTasks.route}/$id")
+                    navController.navigate("challenge_detail/$id")
                 }
             )
         }

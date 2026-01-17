@@ -53,14 +53,22 @@ fun MyChallengeListScreen(
                 // Cabecera de usuario
                 item { ChallengeHeaderSection("Ana Gómez") }
 
-                // Sección: Completados
+                /* Sección: Completados
                 if (uiState.createdChallenges.isNotEmpty()) {
-                    item { SectionTitle("Mis Desafíos: Completados") }
+                    item { SectionTitle("Mis Desafíos: Creados") }
                     // Usamos items() directamente para mejor rendimiento en Compose
                     items(uiState.createdChallenges) { challenge ->
                         ChallengeListContainer {
                             ChallengeItemRow(challenge, onChallengeClick)
                         }
+                    }
+                }
+                */
+                //Desafíos en progreso
+                if (uiState.inProgressChallenges.isNotEmpty()) {
+                    item { SectionTitle("Mis Desafíos: En progreso") }
+                    items(uiState.inProgressChallenges) { challenge ->
+                        ChallengeListContainer { ChallengeItemRow(challenge, onChallengeClick) }
                     }
                 }
 

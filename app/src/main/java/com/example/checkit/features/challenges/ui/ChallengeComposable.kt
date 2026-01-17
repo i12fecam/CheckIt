@@ -83,7 +83,8 @@ fun ChallengeComposable(
             // Botón Guardar
             if(showSaveButton){
                 Button(
-                    onClick = {onSeeMore()},
+                    //onClick = {onSeeMore()},
+                    onClick = { onSave() },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(0.6f) // El botón no ocupa todo el ancho
