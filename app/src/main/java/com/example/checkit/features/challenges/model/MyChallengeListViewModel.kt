@@ -12,8 +12,10 @@ import javax.inject.Inject
 // Representa el estado de la pantalla
 data class MyChallengeListUiState(
     // CORRECCIÓN: La lista debe ser de ChallengeDto
-    val createdChallenges: List<ChallengeDto> = emptyList(),
+    //val createdChallenges: List<ChallengeDto> = emptyList(),
     val savedChallenges: List<ChallengeDto> = emptyList(),
+    val inProgressChallenges: List<ChallengeDto> = emptyList(),
+    //val completedChallenges: List<ChallengeDto> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -35,11 +37,14 @@ class MyChallengeListViewModel @Inject constructor(
             uiState = uiState.copy(isLoading = true)
             try {
                 // LLAMADAS REALES AL BACKEND (Controller: /my-created y /my-saved)
-                val created = challengeService.getMyCreatedChallenges()
+                //val created = challengeService.getMyCreatedChallenges()
+                val inProgress = challengeService.getMyInProgressChallenges()
                 val saved = challengeService.getMySavedChallenges()
 
+
                 uiState = uiState.copy(
-                    createdChallenges = created,
+                    //createdChallenges = created,
+                    inProgressChallenges = inProgress,
                     savedChallenges = saved,
                     isLoading = false,
                     error = null

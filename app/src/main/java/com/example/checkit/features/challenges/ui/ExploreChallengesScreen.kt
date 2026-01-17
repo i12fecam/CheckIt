@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.checkit.features.challenges.model.ExploreChallengesViewModel
-
+import com.example.checkit.features.challenges.ui.ChallengeComposable
 @Composable
 fun ExploreChallengesScreen(
     viewModel: ExploreChallengesViewModel = hiltViewModel(),

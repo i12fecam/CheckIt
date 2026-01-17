@@ -59,23 +59,21 @@ class ExploreChallengesViewModel @Inject constructor(
     fun saveChallenge(challengeId: Long) {
         viewModelScope.launch {
             try {
-                // 1. Llamamos al backend para guardar
+                // Llamada al backend para guardar
                 val response = challengeService.followChallenge(challengeId)
 
                 if (response.errorMessage == null) {
-                    // 2. ÉXITO: Filtramos la lista localmente para que desaparezca el desafío
-                    val updatedList = uiState.challenges.filter { it.id != challengeId }
-
-                    // 3. Actualizamos el estado con la nueva lista sin el desafío guardado
+                    // ÉXITO: Quitamos el desafío de la lista actual para que desaparezca de la pantalla
+                    val newList = uiState.challenges.filter { it.id != challengeId }
                     uiState = uiState.copy(
-                        challenges = updatedList,
-                        filteredChallenges = updatedList.filter {
+                        challenges = newList,
+                        filteredChallenges = newList.filter {
                             it.name.contains(uiState.searchQuery, ignoreCase = true)
                         }
                     )
                 }
             } catch (e: Exception) {
-                // Manejar error si la conexión falla
+                uiState = uiState.copy(error = "Error al guardar")
             }
         }
     }
