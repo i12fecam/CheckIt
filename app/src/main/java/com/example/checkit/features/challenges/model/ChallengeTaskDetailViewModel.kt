@@ -76,6 +76,7 @@ class ChallengeTaskDetailViewModel @Inject constructor(
                     name = taskDetail.name,
                     taskOrder = taskDetail.taskOrder,
                     textClue = taskDetail.textClue,
+                    textClueRevealed = List(taskDetail.textClue.size) { false },
                     nCompletions = taskDetail.nCompletions,
                     completed = taskDetail.completed,
                     type = taskDetail.type
@@ -92,7 +93,10 @@ class ChallengeTaskDetailViewModel @Inject constructor(
 
 
 
+    fun onRevealClue(index: Int) {
+        uiState = uiState.copy(textClueRevealed =  uiState.textClueRevealed.mapIndexed { i, item -> if (i == index) true else item })
 
+    }
 
 
 

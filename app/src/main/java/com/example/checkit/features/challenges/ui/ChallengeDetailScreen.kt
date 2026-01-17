@@ -2,6 +2,7 @@ package com.example.checkit.features.challenges.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +31,7 @@ import com.example.checkit.features.challenges.model.TaskDetail
 @Composable
 fun ChallengeDetailScreen(
     onBack: () -> Unit,
+    onTaskClick: (Long) -> Unit = {},
     viewModel: ChallengeDetailViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState
@@ -64,7 +66,7 @@ fun ChallengeDetailScreen(
 
                         Text("Tareas: En progreso", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
                         uiState.tasksInProgress.forEach { task ->
-                            TaskDetailItem(title = task.name, status = "active", desc = task.description)
+                            TaskDetailItem(title = task.name, status = "active", desc = task.description,onTaskClick = {onTaskClick(task.id)})
                         }
                     }
                 }
@@ -105,7 +107,7 @@ fun ChallengeHeader(name: String, imageUrl: String, figmaPurple: Color) {
     }
 }
 @Composable
-fun InfoSection(label: String, value: String) {
+fun InfoSection(label: String, value: String){
     Column {
         Text(label, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 8.dp, bottom = 4.dp))
         Surface(
@@ -120,10 +122,10 @@ fun InfoSection(label: String, value: String) {
 }
 
 @Composable
-fun TaskDetailItem(title: String, status: String, desc: String) {
+fun TaskDetailItem(title: String, status: String, desc: String, onTaskClick : () -> Unit) {
     val alpha = if (status == "locked") 0.5f else 1f
     Surface(
-        modifier = Modifier.fillMaxWidth().alpha(alpha),
+        modifier = Modifier.fillMaxWidth().alpha(alpha).clickable(onClick = {onTaskClick()}),
         shape = RoundedCornerShape(20.dp),
         shadowElevation = 2.dp,
         color = Color.White,

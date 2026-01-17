@@ -67,8 +67,10 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         ) { backStackEntry ->
             //val id = backStackEntry.arguments?.getLong("challengeId") ?: 0L
             ChallengeDetailScreen(
-                onBack = { navController.popBackStack() }
-                // Passa l'id al ViewModel del dettaglio se necessario
+                onBack = { navController.popBackStack() },
+                onTaskClick = { id ->
+                    navController.navigate(TaskDetail.route.replace("{taskId}", id.toString()))
+                }
             )
         }
         

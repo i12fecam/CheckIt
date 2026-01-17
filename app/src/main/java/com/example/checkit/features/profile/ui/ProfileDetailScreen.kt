@@ -163,14 +163,14 @@ fun ProfileDetailScreen(
                 }
                 Column {
                     Text("Contraseña", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
-                    StyledTextField(value = uiState.password, onValueChange = {viewModel.onPasswordChange(it)}, placeholder = "Cuéntanos sobre ti...", maxChar = 250)
+                    StyledTextField(value = uiState.password, onValueChange = {viewModel.onPasswordChange(it)}, placeholder = "********", maxChar = 250)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Botón de Guardar
                 Button(
-                    onClick = {},
+                    onClick = {viewModel.changePassword()},
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),

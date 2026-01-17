@@ -60,7 +60,7 @@ class ProfileDetailViewModel @Inject constructor(
                 val userDetails = profileService.getOwnUserDetails()
                 uiState = uiState.copy(
                     realname = userDetails.username,
-                    password = "***********",
+                    password = "",
                     email = userDetails.email
                 )
             } catch (e: Exception) {
@@ -98,13 +98,6 @@ class ProfileDetailViewModel @Inject constructor(
     fun changePassword() {
         // Prevent multiple simultaneous login attempts
 
-        // Simple validation check
-        if (uiState.password.isBlank()) {
-            viewModelScope.launch {
-                _events.emit(ProfileDetailEvent.ShowError("La contraseña no puede estar vacia."))
-            }
-            return
-        }
 
         viewModelScope.launch {
             // Simulate a network call via the repository

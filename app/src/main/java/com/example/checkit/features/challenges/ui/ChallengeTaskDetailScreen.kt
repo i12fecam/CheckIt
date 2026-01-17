@@ -2,6 +2,7 @@ package com.example.checkit.features.challenges.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,22 +59,10 @@ fun ChallengeTaskDetailScreen(
                 // SEZIONE IMMAGINE E TITOLO
                 item {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(240.dp).background(FigmaPurple),
+                        modifier = Modifier.fillMaxWidth().height(120.dp).background(FigmaPurple),
                         contentAlignment = Alignment.BottomCenter
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                            Card(
-//                                modifier = Modifier.size(260.dp, 140.dp),
-//                                shape = RoundedCornerShape(24.dp),
-//                                elevation = CardDefaults.cardElevation(8.dp)
-//                            ) {
-//                                AsyncImage(
-//                                    model = "", // This is for the URL or the Base64 for the imagine
-//                                    contentDescription = null,
-//                                    modifier = Modifier.fillMaxSize(),
-//                                    contentScale = ContentScale.Crop
-//                                )
-//                            }
                             Text(
                                 text =viewModel.uiState.name ,
                                 color = Color.White,
@@ -91,30 +80,22 @@ fun ChallengeTaskDetailScreen(
                         modifier = Modifier.padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
+                        //Poner de que challenge es
                         TaskInfoSection(label = "Autor", value = "Juan")
                         TaskInfoSection(label = "Completado por", value = "${viewModel.uiState.nCompletions} personas")
-                        CompleteTaskSection(type = viewModel.uiState.type, onCompleteTask = { viewModel.completeTask() })
+                        ClueSection(viewModel.uiState.textClue,viewModel.uiState.textClueRevealed,viewModel::onRevealClue)
+
+                        TaskInfoSection(label = "Estado", value = if (viewModel.uiState.completed  == true) "Completada" else "Pendiente")
+                        if (!viewModel.uiState.completed) {
+                            CompleteTaskSection(
+                                type = viewModel.uiState.type,
+                                onCompleteTask = { viewModel.completeTask() })
+                        }
                     }
                 }
             }
 
-            // PULSANTE ELIMINA STATICO (Sempre visibile in fondo)
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = Color.Transparent
-            ) {
-                Button(
-                    onClick = { /* Logica eliminazione sfida salvata */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
-                    shape = RoundedCornerShape(25.dp)
-                ) {
-                    Text("Eliminar Desafío Guardado", fontWeight = FontWeight.Bold)
-                }
-            }
+
         }
     }
 }
@@ -136,7 +117,42 @@ fun TaskInfoSection(label: String, value: String) {
     }
 }
 
+@Composable
+fun ClueSection(clues: List<String> , revealed : List<Boolean>,onRevealClue: (Int) -> Unit){
+    Text("Pistas", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 8.dp, bottom = 4.dp))
 
+    clues.forEachIndexed { index, clue ->
+        ClueItemSection(clue = clue,
+            revealed = revealed[index],
+            onClick = {onRevealClue(index)}
+        )
+    }
+}
+@Composable
+fun ClueItemSection(clue: String, revealed: Boolean,onClick: () -> Unit){
+    Surface(
+        modifier = Modifier.fillMaxWidth().clickable(onClick= onClick),
+        shape = RoundedCornerShape(25.dp),
+        shadowElevation = 4.dp,
+        color = Color.White
+    ) {
+        if(revealed) {
+            Text(
+                text = clue,
+                modifier = Modifier.padding(16.dp),
+                fontSize = 13.sp,
+                color = Color.DarkGray
+            )
+        }else{
+            Text(
+                text = "Pulsa para revelar pista",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 13.sp,
+                color = Color.DarkGray
+            )
+        }
+    }
+}
 @Composable
 fun CompleteTaskSection(type: String,onCompleteTask :() -> Unit){
     if(type == "TEXT"){
@@ -150,7 +166,7 @@ fun CompleteTaskSection(type: String,onCompleteTask :() -> Unit){
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
             shape = RoundedCornerShape(25.dp)
         ) {
-            Text("Eliminar Desafío Guardado", fontWeight = FontWeight.Bold)
+            Text("Solucionar desafio", fontWeight = FontWeight.Bold)
         }
     } else if (type == "QR") {
         Button(
