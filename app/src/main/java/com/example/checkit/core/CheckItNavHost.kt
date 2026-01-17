@@ -74,10 +74,10 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
 
         composable(route = MyChallengeList.route) {
             MyChallengeListScreen(
-                onChallengeClick = { challengeId ->
+                onChallengeClick = { id ->
                     // Aquí defines a dónde ir cuando el usuario toca un desafío
                     // Usamos el ID (Long) para navegar al detalle o tareas
-                    navController.navigate("${ChallengeTasks.route}/$challengeId")
+                    navController.navigate("challenge_detail/$id")
                 }
             )
         }
