@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.size.ViewSizeResolver
 import com.example.checkit.features.challenges.model.ChallengeTaskDetailViewModel
 import com.example.checkit.features.profile.model.ProfileDetailViewModel
 
@@ -73,13 +74,13 @@ fun ChallengeTaskDetailScreen(
 //                                    contentScale = ContentScale.Crop
 //                                )
 //                            }
-//                            Text(
-//                                text =viewModel.uiState.taskDto.name ,
-//                                color = Color.White,
-//                                fontSize = 32.sp,
-//                                fontWeight = FontWeight.ExtraBold,
-//                                modifier = Modifier.padding(vertical = 12.dp)
-//                            )
+                            Text(
+                                text =viewModel.uiState.name ,
+                                color = Color.White,
+                                fontSize = 32.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
                         }
                     }
                 }
@@ -90,12 +91,9 @@ fun ChallengeTaskDetailScreen(
                         modifier = Modifier.padding(20.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-//                        TaskInfoSection(label = "Autor", value = "Juan")
-//                        TaskInfoSection(label = "Fecha de creación", value = uiState.creationDate)
-//                        TaskInfoSection(label = "Descripción", value = uiState.description)
-//                        TaskInfoSection(label = "Completado por", value = "${uiState.completedByCount} personas")
-
-
+                        TaskInfoSection(label = "Autor", value = "Juan")
+                        TaskInfoSection(label = "Completado por", value = "${viewModel.uiState.nCompletions} personas")
+                        CompleteTaskSection(type = viewModel.uiState.type, onCompleteTask = { viewModel.completeTask() })
                     }
                 }
             }
@@ -138,3 +136,71 @@ fun TaskInfoSection(label: String, value: String) {
     }
 }
 
+
+@Composable
+fun CompleteTaskSection(type: String,onCompleteTask :() -> Unit){
+    if(type == "TEXT"){
+        StyledTextField(value = "", onValueChange = {onCompleteTask()}, placeholder = "Respuesta", maxChar = 200)
+        Button(
+            onClick = { /* Logica eliminazione sfida salvata */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
+            shape = RoundedCornerShape(25.dp)
+        ) {
+            Text("Eliminar Desafío Guardado", fontWeight = FontWeight.Bold)
+        }
+    } else if (type == "QR") {
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF673AB7)),
+            shape = RoundedCornerShape(25.dp)
+        ) {
+            Text("Escanea el QR desde otra aplicación", fontWeight = FontWeight.Bold)
+        }
+    } else if (type == "NFC") {
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
+            shape = RoundedCornerShape(25.dp)
+        ) {
+            Text("Escanea el NFC", fontWeight = FontWeight.Bold)
+        }
+    }
+
+
+
+}
+
+
+//@Composable
+//fun StyledTextField(value: String, onValueChange: (String) -> Unit, placeholder: String, maxChar: Int) {
+//    Surface(shadowElevation = 6.dp, shape = RoundedCornerShape(50.dp), modifier = Modifier.fillMaxWidth()) {
+//        OutlinedTextField(
+//            value = value,
+//            onValueChange = { if (it.length <= maxChar) onValueChange(it) },
+//            placeholder = { Text(placeholder, color = Color.Gray) },
+//            modifier = Modifier.fillMaxWidth(),
+//            trailingIcon = {
+//                Text("${value.length}/$maxChar", fontSize = 12.sp, color = Color.LightGray, modifier = Modifier.padding(end = 16.dp))
+//            },
+//            shape = RoundedCornerShape(50.dp),
+//            colors = OutlinedTextFieldDefaults.colors(
+//                unfocusedBorderColor = Color.Transparent,
+//                focusedBorderColor = FigmaBlue,
+//                unfocusedContainerColor = Color.White,
+//                focusedContainerColor = Color.White
+//            )
+//        )
+//    }
+//}

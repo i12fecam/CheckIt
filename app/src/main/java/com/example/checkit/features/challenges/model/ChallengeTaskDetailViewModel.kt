@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import com.example.checkit.core.TokenManagerImpl
 import com.example.checkit.features.challenges.data.BasicResponse
 import com.example.checkit.features.challenges.data.ChallengeService
-import com.example.checkit.features.challenges.data.TaskDetailDto
 import com.example.checkit.features.profile.data.ProfileService
 import com.example.checkit.features.profile.data.UserDetailsToChange
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -47,10 +47,12 @@ sealed class ChallengeTaskDetailEvent {
 @HiltViewModel
 class ChallengeTaskDetailViewModel @Inject constructor(
     private val challengeService: ChallengeService,
+    savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context
 ): ViewModel(){
     private val TAG: String = "ChallengeTaskDetailViewModel"
 
+    private val taskId: Long = savedStateHandle["taskId"] ?: 0L
     // --- UI State Management ---
 //
     // Use mutableStateOf for data that the UI will observe and react to immediately
@@ -67,7 +69,7 @@ class ChallengeTaskDetailViewModel @Inject constructor(
     fun loadData() {
         viewModelScope.launch {
             try {
-                val taskDetail = challengeService.getTaskById(1)
+                val taskDetail = challengeService.getTaskById(taskId)
                 uiState = uiState.copy(
                     challengeID = taskDetail.challengeID,
                     id = taskDetail.id,

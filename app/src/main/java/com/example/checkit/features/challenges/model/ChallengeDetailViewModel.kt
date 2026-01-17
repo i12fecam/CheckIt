@@ -55,7 +55,7 @@ class ChallengeDetailViewModel @Inject constructor(
     private fun loadChallengeDetails() {
         viewModelScope.launch {
             try {
-                val challenge = challengeService.getChallengeDetail(challengeId)
+                val challenge = challengeService.getChallengeById(challengeId)
                 uiState = ChallengeDetailState(
                     isLoading = false,
                     name = challenge.name,

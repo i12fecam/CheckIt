@@ -60,6 +60,24 @@ data class BasicResponse(
 
 )
 
+@Serializable
+data class TaskDetailDto(
+    val challengeID: Long,
+    val id: Long,
+    val name: String,
+    val taskOrder: Int,
+    val textClue: List<String>,
+    val nCompletions: Long,
+    val completed: Boolean,
+    val type: String
+
+)
+
+@Serializable
+data class CompleteTaskRequest(
+    val userResponse: String,
+)
+
 interface ChallengeService {
 
     @POST("api/challenges")
@@ -84,6 +102,10 @@ interface ChallengeService {
     @GET("api/challenges/{id}")
     suspend fun getChallengeById(@Path("id") id: Long): ChallengeDto
 
+    @GET("api/tasks/{taskId}")
+    suspend fun getTaskById(@Path("taskId")taskId: Long): TaskDetailDto
+    @POST("/tasks/{taskId}/complete")
+    suspend fun completeTask(taskId: Long,@Body userResponse: String): String
     @DELETE("api/challenges/{id}")
     suspend fun deleteChallenge(@Path("id") id: Long): BasicResponse
 }

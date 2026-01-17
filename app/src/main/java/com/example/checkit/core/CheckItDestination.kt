@@ -28,6 +28,21 @@ object NewChallenge: CheckItDestination {
     override val showNavigationBar = true
 }
 
+object ChallengeDetail : CheckItDestination {
+    override val icon = 1
+    override val route = "challengeDetail/{challengeId}"
+    val arguments = listOf(navArgument("challengeId") { type = NavType.LongType })
+    override val showNavigationBar = true
+}
+
+object TaskDetail : CheckItDestination{
+    override val icon = 1
+    override val route = "taskDetail/{taskId}"
+    val arguments = listOf(navArgument("taskId") { type = NavType.LongType })
+    override val showNavigationBar = true
+}
+
+
 object ChallengeTasks : CheckItDestination{
     override val icon = 1
     override val route = "challengeTasks"
