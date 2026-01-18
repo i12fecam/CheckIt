@@ -156,6 +156,23 @@ fun NewChallengeContent(
                     }
                 }
 
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("¿Tareas en orden?", fontWeight = FontWeight.Bold, color = Color.Black)
+                        Switch(
+                            checked = uiState.isOrdered,
+                            onCheckedChange = { onOrderToggle(it) },
+                            colors = SwitchDefaults.colors(checkedThumbColor = FigmaPurple)
+                        )
+                    }
+                }
+
                 // LISTA DELLE TASK (SCORREVOLE)
                 itemsIndexed(uiState.tasks) { index, task ->
                     TaskCardRefined(index = index, task = task, onUpdate = { updated -> onUpdateTask(index, updated) }, onRemove = { onRemoveTask(index) })
