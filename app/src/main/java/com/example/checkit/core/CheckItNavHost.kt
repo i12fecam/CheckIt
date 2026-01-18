@@ -76,13 +76,16 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         
         composable(
             route = TaskDetail.route,
-            arguments = TaskDetail.arguments
+            arguments = TaskDetail.arguments,
+            deepLinks = TaskDetail.deepLink
         ) { backStackEntry ->
             //val id = backStackEntry.arguments?.getLong("taskId") ?: 0L
             ChallengeTaskDetailScreen(
                 onBack = {navController.popBackStack()},
             )
         }
+
+
 
         composable(route = MyChallengeList.route) {
             MyChallengeListScreen(
@@ -108,14 +111,14 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
                 },
             )
         }
-        composable(
-            route = ChallengeTasks.routeWithArgs,
-            arguments = ChallengeTasks.arguments,
-            deepLinks= ChallengeTasks.deepLinks
-        ){
-                navBackStackEntry ->
-            val message = navBackStackEntry.arguments?.getString(ChallengeTasks.nombreTareaArg)
-            ChallengeListScreen(message?: "Tarea 3")
-        }
+//        composable(
+//            route = ChallengeTasks.routeWithArgs,
+//            arguments = ChallengeTasks.arguments,
+//            deepLinks= ChallengeTasks.deepLinks
+//        ){
+//                navBackStackEntry ->
+//            val message = navBackStackEntry.arguments?.getString(ChallengeTasks.nombreTareaArg)
+//            ChallengeListScreen(message?: "Tarea 3")
+//        }
     }
 }

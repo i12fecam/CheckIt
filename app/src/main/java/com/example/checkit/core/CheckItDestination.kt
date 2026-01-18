@@ -3,6 +3,7 @@ package com.example.checkit.core
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.example.checkit.core.ChallengeTasks.nombreTareaArg
 
 interface CheckItDestination {
     val icon: Int
@@ -35,10 +36,15 @@ object ChallengeDetail : CheckItDestination {
     override val showNavigationBar = true
 }
 
+
+
 object TaskDetail : CheckItDestination{
     override val icon = 1
-    override val route = "taskDetail/{taskId}"
-    val arguments = listOf(navArgument("taskId") { type = NavType.LongType })
+    override val route = "taskDetail/{taskId}?answer={answer}"
+    val arguments = listOf(navArgument("taskId") { type = NavType.LongType },
+        navArgument("answer"){type = NavType.StringType})
+    val deepLink = listOf(navDeepLink { uriPattern = "checkit://completeTask/{taskId}?answer={answer}" })
+
     override val showNavigationBar = true
 }
 

@@ -107,8 +107,8 @@ interface ChallengeService {
 
     @GET("api/tasks/{taskId}")
     suspend fun getTaskById(@Path("taskId")taskId: Long): TaskDetailDto
-    @POST("/tasks/{taskId}/complete")
-    suspend fun completeTask(taskId: Long,@Body userResponse: String): String
+    @POST("api/tasks/{taskId}/complete")
+    suspend fun completeTask(@Path("taskId") taskId: Long,@Body userResponse: String): String
     @DELETE("api/challenges/{id}")
     suspend fun deleteChallenge(@Path("id") id: Long): BasicResponse
 }

@@ -14,6 +14,7 @@ import retrofit2.HttpException
 import javax.inject.Inject
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.checkit.core.TokenManagerImpl
 import com.example.checkit.features.challenges.data.BasicResponse
 import com.example.checkit.features.challenges.data.ChallengeService
@@ -53,6 +54,8 @@ class ChallengeTaskDetailViewModel @Inject constructor(
     private val TAG: String = "ChallengeTaskDetailViewModel"
 
     private val taskId: Long = savedStateHandle["taskId"] ?: 0L
+    private val answer: String? = savedStateHandle["answer"]
+
     // --- UI State Management ---
 //
     // Use mutableStateOf for data that the UI will observe and react to immediately
@@ -64,10 +67,16 @@ class ChallengeTaskDetailViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     init{
-        loadData()
-    }
-    fun loadData() {
         viewModelScope.launch {
+            loadData()
+            if(answer != null){
+                uiState = uiState.copy(response = answer)
+                completeTask()
+            }
+        }
+
+    }
+    suspend fun loadData() {
             try {
                 val taskDetail = challengeService.getTaskById(taskId)
                 uiState = uiState.copy(
@@ -86,7 +95,7 @@ class ChallengeTaskDetailViewModel @Inject constructor(
                 Log.e(TAG, "Error loading data", e)
             }
 
-        }
+
     }
 
 
@@ -100,12 +109,13 @@ class ChallengeTaskDetailViewModel @Inject constructor(
 
 
 
+    fun completeTaskInScope(){
+        viewModelScope.launch { completeTask() }
+    }
 
 
 
-
-    fun completeTask() {
-        viewModelScope.launch {
+    suspend fun completeTask() {
             // Simulate a network call via the repository
             try {
                 val createChallengeResponse = challengeService.completeTask(taskId = uiState.id,
@@ -128,7 +138,7 @@ class ChallengeTaskDetailViewModel @Inject constructor(
             }
 
 
-        }
+
     }
 
 

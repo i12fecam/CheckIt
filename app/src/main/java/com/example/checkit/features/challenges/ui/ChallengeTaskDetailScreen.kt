@@ -11,6 +11,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -24,8 +26,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.size.ViewSizeResolver
+import com.example.checkit.features.challenges.model.ChallengeTaskDetailEvent
 import com.example.checkit.features.challenges.model.ChallengeTaskDetailViewModel
 import com.example.checkit.features.profile.model.ProfileDetailViewModel
+import com.example.checkit.features.registration.ui.LoginEvent
+import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,9 +39,28 @@ fun ChallengeTaskDetailScreen(
     onBack: () -> Unit,
     viewModel: ChallengeTaskDetailViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                is ChallengeTaskDetailEvent.taskCompletedCorrectly -> {
+                    // Call the navigation callback provided to the screen
+                }
+                is ChallengeTaskDetailEvent.ShowError -> {
+                    // Show a snackbar with the error message
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+        }
+    }
     Scaffold(
         containerColor = Color(0xFFF8FAFC),
-        topBar = {
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                topBar = {
             // Header viola che si integra con il design dell'app
             TopAppBar(
                 title = { },
@@ -89,7 +113,7 @@ fun ChallengeTaskDetailScreen(
                         if (!viewModel.uiState.completed) {
                             CompleteTaskSection(
                                 type = viewModel.uiState.type,
-                                onCompleteTask = { viewModel.completeTask() })
+                                onCompleteTask = { viewModel.completeTaskInScope() })
                         }
                     }
                 }
