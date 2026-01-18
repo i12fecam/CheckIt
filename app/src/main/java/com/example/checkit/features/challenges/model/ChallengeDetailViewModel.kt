@@ -23,7 +23,8 @@ data class ChallengeDetailState(
     val isAuthor: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val isOwner: Boolean = false
+    val isOwner: Boolean = false,
+    val response: String = ""
 )
 
 data class TaskDetail(
@@ -106,5 +107,9 @@ class ChallengeDetailViewModel @Inject constructor(
                 uiState = uiState.copy(isLoading = false, errorMessage = "Error al intentar eliminar el desafío")
             }
         }
+    }
+
+    fun onResponseChange(newValue: String) {
+        uiState = uiState.copy(response = newValue)
     }
 }
