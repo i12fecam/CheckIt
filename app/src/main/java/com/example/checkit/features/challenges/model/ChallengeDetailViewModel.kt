@@ -31,7 +31,8 @@ data class TaskDetail(
     val name: String,
     val description: String,
     val isLocked: Boolean = false,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    val type: String = "TEXT", // PUNTO 5: QR, NFC o TEXT
 )
 
 @HiltViewModel
@@ -55,21 +56,32 @@ class ChallengeDetailViewModel @Inject constructor(
     private fun loadChallengeDetails() {
         viewModelScope.launch {
             try {
+                uiState = uiState.copy(isLoading = true)
+                // Usa getChallengeById (nome corretto della tua interfaccia)
                 val challenge = challengeService.getChallengeById(challengeId)
-                uiState = ChallengeDetailState(
+
+                uiState = uiState.copy(
                     isLoading = false,
                     name = challenge.name,
                     author = challenge.authorName ?: "CheckIt Team",
                     description = challenge.description ?: "",
                     completedByCount = challenge.completionCount,
                     tasksInProgress = challenge.tasks.map {
-                        TaskDetail(it.id, it.name, "Instrucciones de la tarea")
-                    }
+                        TaskDetail(
+                            id = it.id,
+                            name = it.name,
+                            description = it.description ?: "Instrucciones",
+                            type = it.type ?: "TEXT", // PUNTO 5
+                            isLocked = it.isLocked,   // PUNTO 4 (dal backend)
+                            isCompleted = it.isCompleted
+                        )
+                    },
+                    isAuthor = challenge.author //Usiamo il booleano reale del backend
                 )
                 // Simulazione logica autore
-                isAuthor = challenge.authorName == "admin@checkit.com"
+                isAuthor = challenge.author
             } catch (e: Exception) {
-                uiState = ChallengeDetailState(
+                uiState = uiState.copy(
                     isLoading = false,
                     errorMessage = "Error loading challenge details")
             }

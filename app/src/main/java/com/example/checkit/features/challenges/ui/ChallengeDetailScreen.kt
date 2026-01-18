@@ -66,7 +66,12 @@ fun ChallengeDetailScreen(
 
                         Text("Tareas: En progreso", fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
                         uiState.tasksInProgress.forEach { task ->
-                            TaskDetailItem(title = task.name, status = "active", desc = task.description,onTaskClick = {onTaskClick(task.id)})
+                            TaskDetailItem(title = task.name,
+                                status = "active",
+                                desc = task.description,
+                                type = task.type,
+                                onTaskClick = {onTaskClick(task.id)})
+
                         }
                     }
                 }
@@ -122,18 +127,28 @@ fun InfoSection(label: String, value: String){
 }
 
 @Composable
-fun TaskDetailItem(title: String, status: String, desc: String, onTaskClick : () -> Unit) {
+fun TaskDetailItem(title: String, status: String, desc: String, type: String, onTaskClick : () -> Unit) {
+
     val alpha = if (status == "locked") 0.5f else 1f
     Surface(
         modifier = Modifier.fillMaxWidth().alpha(alpha).clickable(onClick = {onTaskClick()}),
         shape = RoundedCornerShape(20.dp),
         shadowElevation = 2.dp,
         color = Color.White,
-        border = if (status == "completed") BorderStroke(1.dp, Color.LightGray) else null
+        //border = if (status == "completed") BorderStroke(1.dp, Color.LightGray) else null
     ) {
         Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, modifier = Modifier.weight(1f))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    // MOSTRA IL TIPO DI TAREA (PUNTO 5)
+                    Text(
+                        text = "Tipo: $type",
+                        fontSize = 10.sp,
+                        color = FigmaPurple,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
                 if (status == "completed") {
                     Text("¡Finalizada!", color = Color.Gray, fontSize = 10.sp, fontStyle = FontStyle.Italic)
                 }
