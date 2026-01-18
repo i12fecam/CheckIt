@@ -66,14 +66,14 @@ class ChallengeDetailViewModel @Inject constructor(
                     author = challenge.authorName ?: "CheckIt Team",
                     description = challenge.description ?: "",
                     completedByCount = challenge.completionCount,
-                    tasksInProgress = challenge.tasks.map {
+                    tasksInProgress = challenge.tasks.map { task ->
                         TaskDetail(
-                            id = it.id,
-                            name = it.name,
-                            description = it.description ?: "Instrucciones",
-                            type = it.type ?: "TEXT", // PUNTO 5
-                            isLocked = it.isLocked,   // PUNTO 4 (dal backend)
-                            isCompleted = it.isCompleted
+                            id = task.id,
+                            name = task.name,
+                            description = task.description ?: "Instrucciones",
+                            type = task.type ?: "TEXT", // PUNTO 5
+                            isLocked = task.isLocked,   // PUNTO 4 (dal backend)
+                            isCompleted = task.isCompleted
                         )
                     },
                     isAuthor = challenge.author //Usiamo il booleano reale del backend

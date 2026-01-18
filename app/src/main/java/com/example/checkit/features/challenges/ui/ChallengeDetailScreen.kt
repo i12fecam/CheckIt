@@ -131,7 +131,7 @@ fun TaskDetailItem(title: String, status: String, desc: String, type: String, on
 
     val alpha = if (status == "locked") 0.5f else 1f
     Surface(
-        modifier = Modifier.fillMaxWidth().alpha(alpha).clickable(onClick = {onTaskClick()}),
+        modifier = Modifier.fillMaxWidth().alpha(alpha).clickable(enabled = status != "locked", onClick = {onTaskClick()}),
         shape = RoundedCornerShape(20.dp),
         shadowElevation = 2.dp,
         color = Color.White,
@@ -152,7 +152,12 @@ fun TaskDetailItem(title: String, status: String, desc: String, type: String, on
                 if (status == "completed") {
                     Text("¡Finalizada!", color = Color.Gray, fontSize = 10.sp, fontStyle = FontStyle.Italic)
                 }
-                if (status == "locked") Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(16.dp))
+                if (status == "locked") Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Bloqueado",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(18.dp)
+                )
             }
             Text(text = desc, fontSize = 12.sp, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
         }
