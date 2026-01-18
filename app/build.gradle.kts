@@ -100,13 +100,6 @@ dependencies {
 
     // For icons such as PhotoCamera
     implementation("androidx.compose.material:material-icons-extended")
-
-    //For scanning QR (ZXing)
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-
-    // Per gestire i risultati delle Activity in Compose (rememberLauncherForActivityResult)
-    implementation("androidx.activity:activity-compose:1.8.2")
-
 }
 java {
     toolchain {

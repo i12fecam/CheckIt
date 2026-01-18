@@ -32,19 +32,7 @@ import com.example.checkit.features.challenges.model.ChallengeTaskDetailViewMode
 import com.example.checkit.features.profile.model.ProfileDetailViewModel
 import com.example.checkit.features.registration.ui.LoginEvent
 import kotlinx.coroutines.flow.collectLatest
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.*
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
 
-
-//private val journeyapps: Any
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -126,8 +114,9 @@ fun ChallengeTaskDetailScreen(
                         if (!viewModel.uiState.completed) {
                             CompleteTaskSection(
                                 type = viewModel.uiState.type,
-                                viewModel = viewModel
-                            )
+                                onCompleteTask = { viewModel.completeTaskInScope() },
+                                responseValue = viewModel.uiState.response,
+                                onResponseChange = { viewModel.onResponseChange(it) })
                         }
                     }
                 }
@@ -192,47 +181,23 @@ fun ClueItemSection(clue: String, revealed: Boolean,onClick: () -> Unit){
     }
 }
 @Composable
-fun CompleteTaskSection(
-    type: String,
-    viewModel: ChallengeTaskDetailViewModel // Passiamo il viewModel per aggiornare lo stato
-) {
-    val scope = rememberCoroutineScope()
-    // 1. IL LAUNCHER VA QUI (all'inizio della funzione Composable)
-    val scanLauncher = rememberLauncherForActivityResult(
-        contract = ScanContract()
-    ) { result ->
-        if (result.contents != null) {
-            // Quando scansiona, aggiorna la risposta e invia al backend
-            viewModel.onResponseChange(result.contents)
-            scope.launch { viewModel.completeTask() }
-        }
-    }
-    // 1. Creiamo uno stato locale per il testo inserito
-    //var textInput by remember { mutableStateOf("") }
-
-    if (type == "TEXT") {
-        Column {
-            // 2. Colleghiamo value a textInput
-            OutlinedTextField(
-                value = viewModel.uiState.response,
-                onValueChange = { viewModel.onResponseChange(it)}, // Aggiorna lo stato mentre scrivi
-                placeholder = { Text("Escribe la respuesta") },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                shape = RoundedCornerShape(25.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { scope.launch { viewModel.completeTask() } }, // Invia il testo al click del tasto
-                modifier = Modifier.fillMaxWidth().padding(20.dp).height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B7CFF)),
-                shape = RoundedCornerShape(25.dp)
-            ) {
-                Text("Solucionar desafio", fontWeight = FontWeight.Bold)
-            }
+fun CompleteTaskSection(type: String,responseValue: String ,onCompleteTask :() -> Unit,onResponseChange: (String) -> Unit){
+    if(type == "TEXT"){
+        StyledTextField(value = responseValue, onValueChange = { onResponseChange(it) }, placeholder = "Respuesta", maxChar = 200)
+        Button(
+            onClick = { onCompleteTask() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5)),
+            shape = RoundedCornerShape(25.dp)
+        ) {
+            Text("Solucionar desafio", fontWeight = FontWeight.Bold)
         }
     } else if (type == "QR") {
         Button(
-            onClick = { scanLauncher.launch(ScanOptions()) }, // Usa il launcher qui
+            onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
