@@ -32,7 +32,9 @@ data class ChallengeDto(
     val isOrdered: Boolean = false,
     val tasks: List<TaskDto> = emptyList(),
     val authorName: String? = "CheckIt Team",
-    val completionCount: Int = 0
+    val completionCount: Int = 0,
+    val author: Boolean = false,   // AGGIUNTO: per far funzionare uiState.isAuthor
+    val saved: Boolean = false
 )
 @Serializable
 data class TaskDto(
@@ -40,7 +42,10 @@ data class TaskDto(
     val name: String,
     // NUEVOS CAMPOS (Opcionales para no romper el listado anterior)
     val type: String? = null,
-    val taskOrder: Int? = null
+    val taskOrder: Int? = null,
+    val description: String? = null, // AGGIUNTO: per la descrizione del task
+    val isLocked: Boolean = false,    // AGGIUNTO: per il Punto 4
+    val isCompleted: Boolean = false  // AGGIUNTO: per lo stato completato
 )
 
 //Update the main request to include everything

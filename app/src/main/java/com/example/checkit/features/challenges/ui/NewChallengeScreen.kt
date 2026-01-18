@@ -38,6 +38,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import coil.compose.AsyncImage
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.BorderStroke
 
 
 val FigmaPurple = Color(0xFF6A4DFF)
@@ -252,13 +253,32 @@ fun TaskCardRefined(index: Int, task: TaskRequest, onUpdate: (TaskRequest) -> Un
                             innerTextField()
                         }
                     )
-                    Text(
-                        text = "${task.textClue.length}/200",
-                        textAlign = TextAlign.End, // Corretto l'allineamento
-                        modifier = Modifier.fillMaxWidth(),
-                        fontSize = 10.sp,
-                        color = Color.Gray
-                    )
+                }
+            }
+
+           // PUNTO 1: CAMPO RISPOSTA CORRETTA (SOLO PER TEXT) ---
+            if (task.type == "TEXT") {
+                Spacer(Modifier.height(8.dp))
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = FigmaTeal.copy(alpha = 0.1f), // Colore leggermente diverso per distinguerlo
+                    border = BorderStroke(1.dp, FigmaTeal),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(12.dp)) {
+                        BasicTextField(
+                            value = task.textAnswer ?: "",
+                            onValueChange = { onUpdate(task.copy(textAnswer = it)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            textStyle = TextStyle(color = Color.Black, fontSize = 14.sp, fontWeight = FontWeight.Medium),
+                            decorationBox = { innerTextField ->
+                                if (task.textAnswer.isNullOrEmpty()) {
+                                    Text("Escribe aquí la respuesta correcta", color = Color.Gray, fontSize = 13.sp)
+                                }
+                                innerTextField()
+                            }
+                        )
+                    }
                 }
             }
 
@@ -276,7 +296,11 @@ fun TaskCardRefined(index: Int, task: TaskRequest, onUpdate: (TaskRequest) -> Un
                 listOf("Escaneo QR", "NFC", "Entrada de Texto").forEach { label ->
                     val typeMap = mapOf("Escaneo QR" to "QR", "NFC" to "NFC", "Entrada de Texto" to "TEXT")
                     FigmaChip(text = label, selected = task.type == typeMap[label]) {
-                        onUpdate(task.copy(type = typeMap[label] ?: "TEXT"))
+                        //reset della risposta se si cambia tipo, per pulizia dati
+                        onUpdate(task.copy(
+                            type = typeMap[label] ?: "TEXT",
+                            textAnswer = if (typeMap[label] == "TEXT") task.textAnswer else null
+                        ))
                     }
                 }
             }
