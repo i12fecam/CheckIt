@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.size.ViewSizeResolver
 import com.example.checkit.features.challenges.model.ChallengeTaskDetailEvent
@@ -113,7 +114,9 @@ fun ChallengeTaskDetailScreen(
                         if (!viewModel.uiState.completed) {
                             CompleteTaskSection(
                                 type = viewModel.uiState.type,
-                                onCompleteTask = { viewModel.completeTaskInScope() })
+                                onCompleteTask = { viewModel.completeTaskInScope() },
+                                responseValue = viewModel.uiState.response,
+                                onResponseChange = { viewModel.onResponseChange(it) })
                         }
                     }
                 }
@@ -178,11 +181,11 @@ fun ClueItemSection(clue: String, revealed: Boolean,onClick: () -> Unit){
     }
 }
 @Composable
-fun CompleteTaskSection(type: String,onCompleteTask :() -> Unit){
+fun CompleteTaskSection(type: String,responseValue: String ,onCompleteTask :() -> Unit,onResponseChange: (String) -> Unit){
     if(type == "TEXT"){
-        StyledTextField(value = "", onValueChange = {onCompleteTask()}, placeholder = "Respuesta", maxChar = 200)
+        StyledTextField(value = responseValue, onValueChange = { onResponseChange(it) }, placeholder = "Respuesta", maxChar = 200)
         Button(
-            onClick = { /* Logica eliminazione sfida salvata */ },
+            onClick = { onCompleteTask() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -221,6 +224,7 @@ fun CompleteTaskSection(type: String,onCompleteTask :() -> Unit){
 
 
 }
+
 
 
 //@Composable

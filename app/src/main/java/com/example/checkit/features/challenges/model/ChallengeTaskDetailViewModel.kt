@@ -67,11 +67,14 @@ class ChallengeTaskDetailViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     init{
+        if (answer !="{answer}"  && answer != null){
+            uiState = uiState.copy(response = answer)
+        }
         viewModelScope.launch {
             loadData()
-            if(answer != null){
-                uiState = uiState.copy(response = answer)
+            if(!uiState.completed && uiState.response != ""){
                 completeTask()
+                loadData()
             }
         }
 
@@ -107,7 +110,9 @@ class ChallengeTaskDetailViewModel @Inject constructor(
 
     }
 
-
+    fun onResponseChange(response: String){
+        uiState = uiState.copy(response= response)
+    }
 
     fun completeTaskInScope(){
         viewModelScope.launch { completeTask() }
