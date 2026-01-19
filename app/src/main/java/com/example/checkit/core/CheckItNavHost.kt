@@ -26,12 +26,11 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         startDestination = Login.route,
         modifier = Modifier.padding(innerPadding))
     {
-        composable(route = ChallengeTasks.route){
-            ChallengeListScreen(message = null)
-        }
+
+
         composable(route = Login.route) {
             LoginScreen(onLogin = {
-                navController.navigate(ChallengeTasks.route)
+                navController.navigate(MyChallengeList.route)
 
             },
             onNavigateToRegistration = {
@@ -111,14 +110,5 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
                 },
             )
         }
-//        composable(
-//            route = ChallengeTasks.routeWithArgs,
-//            arguments = ChallengeTasks.arguments,
-//            deepLinks= ChallengeTasks.deepLinks
-//        ){
-//                navBackStackEntry ->
-//            val message = navBackStackEntry.arguments?.getString(ChallengeTasks.nombreTareaArg)
-//            ChallengeListScreen(message?: "Tarea 3")
-//        }
     }
 }

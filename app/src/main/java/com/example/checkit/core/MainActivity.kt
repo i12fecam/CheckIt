@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -54,24 +55,25 @@ fun CheckItApp() {
             if (currentScreen.showNavigationBar){
                 NavigationBar() {
                     NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Person, contentDescription = null) },
-                        label = { Text("Perfil") },
-                        selected = false,
-                        onClick = {
-                            navController.navigate(route = Profile.route) { launchSingleTop = true }
-                        }
-                    )
-                    NavigationBarItem(
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                        label = { Text("Desafio") },
+                        label = { Text("Mis Desafíos") },
                         selected = false,
                         onClick = {
-                            navController.navigate(route = ChallengeTasks.route) {
+                            navController.navigate(route = MyChallengeList.route) {
                                 launchSingleTop = true
                             }
                         }
                     )
-
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        label = { Text("Buscar") },
+                        selected = false,
+                        onClick = {
+                            navController.navigate(route = ExploreChallenges.route) {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
                     NavigationBarItem(
                         icon = { Icon(Icons.Filled.Add, contentDescription = null) },
                         label = { Text("Crear Nuevo Desafio") },
@@ -83,25 +85,27 @@ fun CheckItApp() {
                         }
                     )
                     NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Add, contentDescription = null) },
-                        label = { Text("Mis Desafíos") },
+                        icon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                        label = { Text("Perfil") },
                         selected = false,
                         onClick = {
-                            navController.navigate(route = MyChallengeList.route) {
-                                launchSingleTop = true
-                            }
+                            navController.navigate(route = Profile.route) { launchSingleTop = true }
                         }
                     )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Add, contentDescription = null) },
-                        label = { Text("Buscar") },
-                        selected = false,
-                        onClick = {
-                            navController.navigate(route = ExploreChallenges.route) {
-                                launchSingleTop = true
-                            }
-                        }
-                    )
+//                    NavigationBarItem(
+//                        icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
+//                        label = { Text("Desafio") },
+//                        selected = false,
+//                        onClick = {
+//                            navController.navigate(route = ChallengeTasks.route) {
+//                                launchSingleTop = true
+//                            }
+//                        }
+//                    )
+
+
+
+
                 }
             }
 
