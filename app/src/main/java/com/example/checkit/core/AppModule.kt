@@ -38,9 +38,9 @@ annotation class PublicRetrofit
 annotation class ProtectedRetrofit
 object RetrofitClient {
     //Para cuando se utilice el emulador
-    const val BASE_URL = "http://10.0.2.2:8080/"
+    //const val BASE_URL = "http://10.0.2.2:8080/"
     // para cuando se utilice en el movil poner la IP del dispositivo
-    //const val BASE_URL = "http://192.168.0.228:8080/"
+    const val BASE_URL = "http://192.168.0.228:8080/"
     private val json = Json { ignoreUnknownKeys = true }
 }
 
