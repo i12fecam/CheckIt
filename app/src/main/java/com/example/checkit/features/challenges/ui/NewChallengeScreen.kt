@@ -113,7 +113,7 @@ fun NewChallengeContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         // Usiamo una Column per separare la lista dai pulsanti statici
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
 
             LazyColumn(
                 modifier = Modifier.weight(1f), // La lista occupa lo spazio restante e scorre
@@ -121,27 +121,64 @@ fun NewChallengeContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // HEADER IMMAGE CON DECORAZIONI
+                // HEADER IMAGE CON EFFETTO OVERLAP CORRETTO
                 item {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(240.dp).background(FigmaPurple),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp) // Altezza totale del contenitore
                     ) {
-                        // Cerchi decorativi sfocati (Foto 2)
-                        Box(modifier = Modifier.size(150.dp).offset(x = (-100).dp, y = (-50).dp).background(Color.White.copy(alpha = 0.15f), CircleShape))
-                        Box(modifier = Modifier.size(100.dp).offset(x = 80.dp, y = 40.dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
+                        // 1. Sfondo Viola (copre solo la parte superiore)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(140.dp) // Altezza del colore viola
+                                .background(FigmaPurple),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            // Cerchi decorativi sfocati
+                            Box(modifier = Modifier.size(150.dp).offset(x = (-100).dp, y = (-50).dp).background(Color.White.copy(alpha = 0.15f), CircleShape))
+                            Box(modifier = Modifier.size(100.dp).offset(x = 80.dp, y = 40.dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
+                        }
 
+                        // 2. Card dell'Immagine (posizionata a cavallo tra viola e bianco)
                         Card(
                             onClick = { launcher.launch("image/*") },
-                            modifier = Modifier.size(280.dp, 160.dp),
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter) // Si ancora al fondo del Box da 250.dp
+                                .padding(bottom = 10.dp)       // Margine dal fondo per non toccare i campi sotto
+                                .size(280.dp, 160.dp),
                             shape = RoundedCornerShape(24.dp),
-                            colors = CardDefaults.cardColors(containerColor = FigmaTeal),
-                            elevation = CardDefaults.cardElevation(8.dp)
+                            // Cambiato in Bianco per staccare dal viola e migliorare la visibilità
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(2.dp, FigmaTeal), // Bordo Teal per contrasto
+                            elevation = CardDefaults.cardElevation(12.dp)
                         ) {
                             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 if (uiState.imageUrl.isNotEmpty()) {
-                                    AsyncImage(model = uiState.imageUrl, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                                    AsyncImage(
+                                        model = uiState.imageUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentScale = ContentScale.Crop
+                                    )
                                 } else {
-                                    Text("+ Añadir una Imagen", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                                    // Icona + Testo Teal su Bianco per massima leggibilità
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Icon(
+                                            imageVector = Icons.Default.PhotoCamera,
+                                            contentDescription = null,
+                                            tint = FigmaTeal,
+                                            modifier = Modifier.size(32.dp)
+                                        )
+                                        Spacer(Modifier.height(8.dp))
+                                        Text(
+                                            "+ Añadir una Imagen",
+                                            color = FigmaTeal,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            fontSize = 18.sp
+                                        )
+                                    }
                                 }
                             }
                         }
