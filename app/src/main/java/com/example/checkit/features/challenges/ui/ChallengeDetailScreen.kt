@@ -26,6 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.checkit.features.challenges.model.ChallengeDetailState
 import com.example.checkit.features.challenges.model.ChallengeDetailViewModel
 import com.example.checkit.features.challenges.model.TaskDetail
+import android.util.Base64
+import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +59,7 @@ fun ChallengeDetailScreen(
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
             LazyColumn(modifier = Modifier.weight(1f), contentPadding = PaddingValues(bottom = 16.dp)) {
                 item {
-                    ChallengeHeader(name = uiState.name, imageUrl = "", figmaPurple = FigmaPurple)
+                    ChallengeHeader(name = uiState.name, imageUrl = uiState.imageUrl, figmaPurple = FigmaPurple)
                 }
                 item {
                     Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -97,6 +99,21 @@ fun ChallengeDetailScreen(
 
 @Composable
 fun ChallengeHeader(name: String, imageUrl: String, figmaPurple: Color) {
+    val imageModel = remember(imageUrl) {
+        if (imageUrl.isEmpty()) {
+            "" // Mostra il placeholder se non c'è immagine
+        } else if (imageUrl.startsWith("http") || imageUrl.startsWith("content")) {
+            imageUrl // È un URL o un URI locale
+        } else {
+            try {
+                // È una stringa Base64: la trasformiamo in ByteArray per Coil
+                Base64.decode(imageUrl, Base64.DEFAULT)
+            } catch (e: Exception) {
+                imageUrl
+            }
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxWidth().height(240.dp).background(figmaPurple),
         contentAlignment = Alignment.BottomCenter
@@ -106,7 +123,7 @@ fun ChallengeHeader(name: String, imageUrl: String, figmaPurple: Color) {
                 modifier = Modifier.size(260.dp, 140.dp),
                 shape = RoundedCornerShape(24.dp)
             ) {
-                AsyncImage(model = imageUrl, contentDescription = null, contentScale = ContentScale.Crop)
+                AsyncImage(model = imageModel, contentDescription = null, contentScale = ContentScale.Crop)
             }
             Text(text = name, color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(vertical = 12.dp))
         }

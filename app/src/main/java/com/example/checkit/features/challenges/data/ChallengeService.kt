@@ -28,7 +28,7 @@ data class ChallengeDto(
     val id: Long,
     val name: String,
     val description: String? = null,
-    val image: String? = null,
+    val imageBase64: String?,
     val isOrdered: Boolean = false,
     val tasks: List<TaskDto> = emptyList(),
     val authorName: String? = "CheckIt Team",

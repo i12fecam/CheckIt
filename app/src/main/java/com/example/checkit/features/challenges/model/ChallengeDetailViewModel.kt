@@ -23,7 +23,8 @@ data class ChallengeDetailState(
     val isAuthor: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val isOwner: Boolean = false
+    val isOwner: Boolean = false,
+    val imageUrl: String = ""
 )
 
 data class TaskDetail(
@@ -63,6 +64,7 @@ class ChallengeDetailViewModel @Inject constructor(
                 uiState = uiState.copy(
                     isLoading = false,
                     name = challenge.name,
+                    imageUrl = challenge.imageBase64 ?: "",
                     author = challenge.authorName ?: "CheckIt Team",
                     description = challenge.description ?: "",
                     completedByCount = challenge.completionCount,
