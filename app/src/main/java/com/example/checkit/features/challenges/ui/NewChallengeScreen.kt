@@ -113,7 +113,7 @@ fun NewChallengeContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         // Usiamo una Column per separare la lista dai pulsanti statici
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
             LazyColumn(
                 modifier = Modifier.weight(1f), // La lista occupa lo spazio restante e scorre

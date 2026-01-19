@@ -85,7 +85,7 @@ fun ProfileDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                //.padding(padding)
                 .verticalScroll(rememberScrollState()) // Scroll simple para perfil
         ) {
             // --- HEADER DE PERFIL ---

@@ -58,71 +58,99 @@ fun ChallengeTaskDetailScreen(
             }
         }
     }
+
     Scaffold(
         containerColor = Color(0xFFF8FAFC),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-                topBar = {
-            // Header viola che si integra con il design dell'app
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = FigmaPurple)
-            )
-        }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+//                topBar = {
+//            // Header viola che si integra con il design dell'app
+//            TopAppBar(
+//                title = { },
+//                navigationIcon = {
+//                    IconButton(onClick = onBack) {
+//                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
+//                    }
+//                },
+//                colors = TopAppBarDefaults.topAppBarColors(containerColor = FigmaPurple)
+//            )
+//        }
     ) { padding ->
+        
         // Layout a colonna per mantenere il pulsante fisso in fondo
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        Box (modifier = Modifier.fillMaxSize()){
 
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                // SEZIONE IMMAGINE E TITOLO
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().height(120.dp).background(FigmaPurple),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text =viewModel.uiState.name ,
-                                color = Color.White,
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                modifier = Modifier.padding(vertical = 12.dp)
+            Column(modifier = Modifier.fillMaxSize()) {
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    // SEZIONE IMMAGINE E TITOLO
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .background(FigmaPurple),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = viewModel.uiState.name,
+                                    color = Color.White,
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.padding(vertical = 12.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    // DETTAGLI DELLA SFIDA
+                    item {
+                        Column(
+                            modifier = Modifier.padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            //Poner de que challenge es
+                            TaskInfoSection(label = "Autor", value = "Juan")
+                            TaskInfoSection(
+                                label = "Completado por",
+                                value = "${viewModel.uiState.nCompletions} personas"
                             )
+                            ClueSection(
+                                viewModel.uiState.textClue,
+                                viewModel.uiState.textClueRevealed,
+                                viewModel::onRevealClue
+                            )
+
+                            TaskInfoSection(
+                                label = "Estado",
+                                value = if (viewModel.uiState.completed == true) "Completada" else "Pendiente"
+                            )
+                            if (!viewModel.uiState.completed) {
+                                CompleteTaskSection(
+                                    type = viewModel.uiState.type,
+                                    onCompleteTask = { viewModel.completeTaskInScope() },
+                                    responseValue = viewModel.uiState.response,
+                                    onResponseChange = { viewModel.onResponseChange(it) })
+                            }
                         }
                     }
                 }
 
-                // DETTAGLI DELLA SFIDA
-                item {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        //Poner de que challenge es
-                        TaskInfoSection(label = "Autor", value = "Juan")
-                        TaskInfoSection(label = "Completado por", value = "${viewModel.uiState.nCompletions} personas")
-                        ClueSection(viewModel.uiState.textClue,viewModel.uiState.textClueRevealed,viewModel::onRevealClue)
 
-                        TaskInfoSection(label = "Estado", value = if (viewModel.uiState.completed  == true) "Completada" else "Pendiente")
-                        if (!viewModel.uiState.completed) {
-                            CompleteTaskSection(
-                                type = viewModel.uiState.type,
-                                onCompleteTask = { viewModel.completeTaskInScope() },
-                                responseValue = viewModel.uiState.response,
-                                onResponseChange = { viewModel.onResponseChange(it) })
-                        }
-                    }
-                }
             }
-
-
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.padding(top = 12.dp, start = 8.dp) // Adjust for status bar if needed
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
         }
     }
 }
@@ -158,7 +186,9 @@ fun ClueSection(clues: List<String> , revealed : List<Boolean>,onRevealClue: (In
 @Composable
 fun ClueItemSection(clue: String, revealed: Boolean,onClick: () -> Unit){
     Surface(
-        modifier = Modifier.fillMaxWidth().clickable(onClick= onClick),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(25.dp),
         shadowElevation = 4.dp,
         color = Color.White

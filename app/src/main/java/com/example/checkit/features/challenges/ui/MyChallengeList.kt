@@ -50,35 +50,21 @@ fun MyChallengeListScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                    .fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 32.dp)
             ) {
-                // Cabecera de usuario
-                item { ChallengeHeaderSection("Ana Gómez") }
 
-                /* Sección: Completados
-                if (uiState.createdChallenges.isNotEmpty()) {
-                    item { SectionTitle("Mis Desafíos: Creados") }
-                    // Usamos items() directamente para mejor rendimiento en Compose
-                    items(uiState.createdChallenges) { challenge ->
-                        ChallengeListContainer {
-                            ChallengeItemRow(challenge, onChallengeClick)
-                        }
-                    }
-                }
-                */
+
                 //Desafíos en progreso
+                item { SectionTitle("Mis Desafíos: En progreso") }
                 if (uiState.inProgressChallenges.isNotEmpty()) {
-                    item { SectionTitle("Mis Desafíos: En progreso") }
                     items(uiState.inProgressChallenges) { challenge ->
                         ChallengeListContainer { ChallengeItemRow(challenge, onChallengeClick) }
                     }
                 }
-
+                item { SectionTitle("Mis Desafíos: Guardados") }
                 // Sección: Guardados
                 if (uiState.savedChallenges.isNotEmpty()) {
-                    item { SectionTitle("Mis Desafíos: Guardados") }
                     items(uiState.savedChallenges) { challenge ->
                         ChallengeListContainer {
                             ChallengeItemRow(challenge, onChallengeClick)
