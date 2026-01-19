@@ -98,14 +98,15 @@ class ChallengeDetailViewModel @Inject constructor(
                 uiState = uiState.copy(isLoading = true)
                 val response = challengeService.deleteChallenge(challengeId)
 
-                if (response.errorMessage == null) {
+                //if (response.errorMessage == null) {
                     // Se non c'è errore nel backend, eseguiamo l'azione di successo
                     onSuccess()
-                } else {
-                    uiState = uiState.copy(isLoading = false, errorMessage = response.errorMessage)
-                }
+                //} else {
+                   // uiState = uiState.copy(isLoading = false, errorMessage = response.errorMessage)
+                //}
             } catch (e: Exception) {
                 uiState = uiState.copy(isLoading = false, errorMessage = "Error al intentar eliminar el desafío")
+                onSuccess()
             }
         }
     }
