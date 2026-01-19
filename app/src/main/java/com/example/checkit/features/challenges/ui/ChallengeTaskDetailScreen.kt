@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChallengeTaskDetailScreen(
-    onBack: () -> Unit,
+    onBack: (Long) -> Unit,
     viewModel: ChallengeTaskDetailViewModel = hiltViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -142,7 +142,7 @@ fun ChallengeTaskDetailScreen(
 
             }
             IconButton(
-                onClick = onBack,
+                onClick = {onBack(viewModel.uiState.challengeID)},
                 modifier = Modifier.padding(top = 12.dp, start = 8.dp) // Adjust for status bar if needed
             ) {
                 Icon(

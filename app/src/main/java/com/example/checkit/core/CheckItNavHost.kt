@@ -84,7 +84,16 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
         ) { backStackEntry ->
             //val id = backStackEntry.arguments?.getLong("taskId") ?: 0L
             ChallengeTaskDetailScreen(
-                onBack = {navController.popBackStack()},
+                onBack = {if (navController.previousBackStackEntry != null) {
+                    navController.popBackStack()
+                } else {
+                    // No hay a dónde volver.
+                    // Aquí podrías cerrar la App o navegar al Inicio
+//                    navController.navigate(ChallengeDetail.route.replace("{challengeId}", id.toString())) {
+//                        popUpTo(0) // Limpia la pila para evitar bucles
+//                    }
+                    navController.navigate(MyChallengeList.route)
+                }},
             )
         }
 
