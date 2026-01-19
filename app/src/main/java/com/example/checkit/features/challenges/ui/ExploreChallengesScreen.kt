@@ -33,7 +33,9 @@ fun ExploreChallengesScreen(
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 80.dp) // Espacio para el menú inferior
+            contentPadding = PaddingValues( 15.dp), // Espacio para el menú inferior
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+
         ) {
             // CABECERA CON TÍTULO Y BUSCADOR
             item {

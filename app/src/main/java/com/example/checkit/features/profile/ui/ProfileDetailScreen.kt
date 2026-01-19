@@ -2,6 +2,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,8 +39,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.checkit.features.challenges.ui.ChallengeComposable
+import com.example.checkit.features.challenges.ui.ChallengeItemRow
+import com.example.checkit.features.challenges.ui.ChallengeListContainer
 import com.example.checkit.features.challenges.ui.FigmaPurple
 import com.example.checkit.features.challenges.ui.FigmaTeal
+import com.example.checkit.features.challenges.ui.SectionTitle
 import com.example.checkit.features.challenges.ui.StyledTextField
 import com.example.checkit.features.profile.model.ProfileDetailEvent
 import com.example.checkit.features.profile.model.ProfileDetailViewModel
@@ -46,7 +53,8 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileDetailScreen(
-    onCloseSession: () -> Unit, viewModel: ProfileDetailViewModel = hiltViewModel()
+    onCloseSession: () -> Unit, viewModel: ProfileDetailViewModel = hiltViewModel(),
+    onSeeMore: (Long) -> Unit
 ) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
@@ -82,94 +90,95 @@ fun ProfileDetailScreen(
 //            )
         }
     ) { padding ->
+
+
+        // --- CAMPOS DE EDICIÓN ---
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                //.padding(padding)
-                .verticalScroll(rememberScrollState()) // Scroll simple para perfil
+                .fillMaxWidth()
+                .padding(24.dp),
+            //verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // --- HEADER DE PERFIL ---
-            Box(
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .background(FigmaPurple),
-                contentAlignment = Alignment.Center
-            ) {
-                // Decoraciones circulares de fondo
-                Box(modifier = Modifier.size(180.dp).offset(x = (-120).dp, y = (-60).dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
-                Box(modifier = Modifier.size(120.dp).offset(x = 130.dp, y = 50.dp).background(Color.White.copy(alpha = 0.08f), CircleShape))
-
-                // Foto de Perfil Circular
-                Box(contentAlignment = Alignment.BottomEnd) {
-                    Surface(
-                        modifier = Modifier
-                            .size(130.dp)
-                            .padding(4.dp),
-                        shape = CircleShape,
-                        color = Color.White,
-                        shadowElevation = 8.dp
-                    ) {
-//                        if (uiState.imageUrl.isNotEmpty()) {
-//                            AsyncImage(
-//                                model = uiState.imageUrl,
-//                                contentDescription = "Profile Photo",
-//                                modifier = Modifier.clip(CircleShape),
-//                                contentScale = ContentScale.Crop
-//                            )
-//                        } else {
-                            // Placeholder si no hay imagen
-                            Box(Modifier.fillMaxSize().background(FigmaTeal), contentAlignment = Alignment.Center) {
-                                Icon(Icons.Default.PhotoCamera, contentDescription = null, tint = Color.White, modifier = Modifier.size(40.dp))
-                            }
-//                        }
-                    }
-//                    // Botón flotante para editar foto
-//                    SmallFloatingActionButton(
-//                        onClick = { launcher.launch("image/*") },
-//                        containerColor = FigmaBlue,
-//                        contentColor = Color.White,
-//                        shape = CircleShape,
-//                        modifier = Modifier.size(40.dp).offset(x = (-4).dp, y = (-4).dp)
-//                    ) {
-//                        Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(20.dp))
-//                    }
-                }
-            }
-
-            // --- CAMPOS DE EDICIÓN ---
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Text(
+//                item{Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(220.dp)
+//                        .background(FigmaPurple),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    // Decoraciones circulares de fondo
+//                    Box(modifier = Modifier.size(180.dp).offset(x = (-120).dp, y = (-60).dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
+//                    Box(modifier = Modifier.size(120.dp).offset(x = 130.dp, y = 50.dp).background(Color.White.copy(alpha = 0.08f), CircleShape))
+//
+//                    // Foto de Perfil Circular
+//                    Box(contentAlignment = Alignment.BottomEnd) {
+//                        Surface(
+//                            modifier = Modifier
+//                                .size(130.dp)
+//                                .padding(4.dp),
+//                            shape = CircleShape,
+//                            color = Color.White,
+//                            shadowElevation = 8.dp
+//                        ) {
+//                            // Placeholder si no hay imagen
+//                            Box(Modifier.fillMaxSize().background(FigmaTeal), contentAlignment = Alignment.Center) {
+//                                Icon(Icons.Default.PhotoCamera, contentDescription = null, tint = Color.White, modifier = Modifier.size(40.dp))
+//                            }
+//                        }
+//                    }
+//
+//                }}
+                item{Text(
+                    text = "Mis Desafíos: Creados por mí",
+                    style = MaterialTheme.typography.titleLarge, // Ya incluye peso y tamaño óptimo
+                    color = MaterialTheme.colorScheme.onSurface, // Color adaptativo (oscuro en modo claro)
+                    //modifier = Modifier.padding(vertical = 8.dp)
+                )}
+                    //desafios
+                viewModel.uiState.myChallenges.forEach { challenge ->
+                    item {
+                        ChallengeComposable(
+                            title = challenge.name,
+                            description = challenge.description ?: "Sin descripción",
+                            authorName = challenge.authorName ?: "Autor",
+                            peopleCompleted = challenge.completionCount,
+                            onSeeMore = { onSeeMore(challenge.id) },
+                            onSave = {}
+                        )
+                    }
+                }
+                item{Text(
                     text = "Información Personal",
                     style = MaterialTheme.typography.titleLarge, // Ya incluye peso y tamaño óptimo
                     color = MaterialTheme.colorScheme.onSurface, // Color adaptativo (oscuro en modo claro)
                     modifier = Modifier.padding(vertical = 8.dp)
-                )
+                )}
 
                 // Reutilizamos tu StyledTextField pero con labels
-                Column {
+                item{Column {
                     Text("Nombre Completo", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
                     StyledTextField(value = uiState.realname, onValueChange ={ viewModel.onRealNameChange(it)}, placeholder = "Ej. Juan Pérez", maxChar = 30)
-                }
+                }}
 
-                Column {
+                item{Column {
                     Text("Email", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
                     StyledTextField(value = uiState.email, onValueChange ={}, placeholder = "thomas.a.hendricks@example.com", maxChar = 30)
-                }
-                Column {
+                }}
+                item{Column {
                     Text("Contraseña", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(start = 12.dp, bottom = 8.dp))
                     StyledTextField(value = uiState.password, onValueChange = {viewModel.onPasswordChange(it)}, placeholder = "********", maxChar = 250)
-                }
+                }}
 
-                Spacer(modifier = Modifier.height(20.dp))
+                item{Spacer(modifier = Modifier.height(20.dp))}
 
                 // Botón de Guardar
-                Button(
+                item{Button(
                     onClick = {viewModel.changePassword()},
                     modifier = Modifier
                         .fillMaxWidth()
@@ -179,10 +188,10 @@ fun ProfileDetailScreen(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
                     Text("Actualizar Perfil", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
+                }}
 
                 // Botón de logout
-                Button(
+                item{Button(
                     onClick = {
                         viewModel.logout();
                         onCloseSession()
@@ -195,8 +204,11 @@ fun ProfileDetailScreen(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
                 ) {
                     Text("Cerrar sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
+                }}
             }
+
+
         }
+
     }
 }

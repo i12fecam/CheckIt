@@ -39,7 +39,8 @@ fun ChallengeComposable(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            //.padding(16.dp)
+        ,
         shape = RoundedCornerShape(40.dp), // Esquinas muy redondeadas como en la imagen
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
