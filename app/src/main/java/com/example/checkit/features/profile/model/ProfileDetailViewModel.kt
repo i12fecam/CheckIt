@@ -1,5 +1,6 @@
 package com.example.checkit.features.profile.model
 
+import ads_mobile_sdk.my
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -14,6 +15,8 @@ import retrofit2.HttpException
 import javax.inject.Inject
 import android.content.Context
 import com.example.checkit.core.TokenManagerImpl
+import com.example.checkit.features.challenges.data.ChallengeDto
+import com.example.checkit.features.challenges.data.ChallengeService
 import com.example.checkit.features.profile.data.ProfileService
 import com.example.checkit.features.profile.data.UserDetailsToChange
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,7 +27,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 data class ProfileDetailUiState(
     val realname: String = "username",
     val email: String = "email",
-    val password: String = "password"
+    val password: String = "password",
+    val myChallenges: List<ChallengeDto> = emptyList()
 )
 
 // Events that trigger a one-time action in the UI
@@ -37,6 +41,7 @@ sealed class ProfileDetailEvent {
 class ProfileDetailViewModel @Inject constructor(
     private val profileService: ProfileService,
     private val tokenManagerImpl: TokenManagerImpl,
+    private val challengeService: ChallengeService,
     @ApplicationContext private val context: Context
 ): ViewModel(){
     private val TAG: String = "ProfileDetailViewModel"
@@ -58,10 +63,13 @@ class ProfileDetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val userDetails = profileService.getOwnUserDetails()
+                val myChallenges = challengeService.getMyCreatedChallenges()
+
                 uiState = uiState.copy(
                     realname = userDetails.username,
                     password = "",
-                    email = userDetails.email
+                    email = userDetails.email,
+                    myChallenges = myChallenges
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading data", e)

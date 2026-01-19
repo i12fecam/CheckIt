@@ -114,6 +114,9 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
                 onCloseSession = {
                     navController.navigate(Login.route)
                 },
+                onSeeMore = { id ->
+                    navController.navigate(ChallengeDetail.route.replace("{challengeId}", id.toString()))
+                }
             )
         }
     }
