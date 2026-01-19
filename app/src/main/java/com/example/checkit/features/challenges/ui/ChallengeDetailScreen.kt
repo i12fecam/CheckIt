@@ -31,6 +31,7 @@ import com.example.checkit.features.challenges.model.TaskDetail
 @Composable
 fun ChallengeDetailScreen(
     onBack: () -> Unit,
+    onDeleteSuccess: () -> Unit,
     onTaskClick: (Long) -> Unit = {},
     viewModel: ChallengeDetailViewModel = hiltViewModel()
 ) {
@@ -79,7 +80,7 @@ fun ChallengeDetailScreen(
 
             if (isAuthor) {
                 Button(
-                    onClick = { viewModel.deleteChallenge(onSuccess = onBack) },
+                    onClick = { viewModel.deleteChallenge(onSuccess = onDeleteSuccess) },
                     modifier = Modifier.fillMaxWidth().padding(20.dp).height(50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
                     shape = RoundedCornerShape(25.dp)
