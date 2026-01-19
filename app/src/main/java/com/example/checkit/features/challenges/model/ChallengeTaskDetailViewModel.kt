@@ -29,6 +29,7 @@ import kotlin.Long
 data class ChallengeTaskDetailUiState(
     val challengeID: Long = -1,
     val id: Long = -1,
+    val authorName: String = "Autor",
     val name: String = "Nombre de la tarea",
     val taskOrder: Int = 1,
     val textClue: List<String> = emptyList(),
@@ -37,6 +38,7 @@ data class ChallengeTaskDetailUiState(
     val type: String = "QR",
     val textClueRevealed: List<Boolean> = emptyList(),
     val response: String = ""
+
 )
 
 // Events that trigger a one-time action in the UI
@@ -91,7 +93,8 @@ class ChallengeTaskDetailViewModel @Inject constructor(
                     textClueRevealed = List(taskDetail.textClue.size) { false },
                     nCompletions = taskDetail.nCompletions,
                     completed = taskDetail.completed,
-                    type = taskDetail.type
+                    type = taskDetail.type,
+                    authorName = taskDetail.authorName
 
                 )
             } catch (e: Exception) {

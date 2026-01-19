@@ -74,8 +74,8 @@ data class TaskDetailDto(
     val textClue: List<String>,
     val nCompletions: Long,
     val completed: Boolean,
-    val type: String
-
+    val type: String,
+    val authorName: String
 )
 
 @Serializable

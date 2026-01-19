@@ -113,7 +113,7 @@ fun ChallengeTaskDetailScreen(
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             //Poner de que challenge es
-                            TaskInfoSection(label = "Autor", value = "Juan")
+                            TaskInfoSection(label = "Autor", value = viewModel.uiState.authorName)
                             TaskInfoSection(
                                 label = "Completado por",
                                 value = "${viewModel.uiState.nCompletions} personas"
