@@ -68,6 +68,12 @@ fun CheckItNavHost(navController: NavHostController,innerPadding: PaddingValues)
             //val id = backStackEntry.arguments?.getLong("challengeId") ?: 0L
             ChallengeDetailScreen(
                 onBack = { navController.popBackStack() },
+                onDeleteSuccess = {
+                    // CAMBIA QUI: forza la navigazione verso Mis Desafíos e pulisce lo stack
+                    navController.navigate(MyChallengeList.route) {
+                        popUpTo(MyChallengeList.route) { inclusive = true }
+                    }
+                },
                 onTaskClick = { id ->
                     navController.navigate(TaskDetail.route.replace("{taskId}", id.toString()))
                 }

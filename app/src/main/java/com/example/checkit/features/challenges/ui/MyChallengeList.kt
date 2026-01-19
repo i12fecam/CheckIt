@@ -30,6 +30,10 @@ fun MyChallengeListScreen(
     viewModel: MyChallengeListViewModel = hiltViewModel(),
     onChallengeClick: (Long) -> Unit
 ) {
+
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.loadChallenges() // Assicurati che il metodo nel tuo ViewModel si chiami così
+    }
     val uiState = viewModel.uiState
 
     Scaffold(
